@@ -1,0 +1,2584 @@
+
+==============================
+安装ftp服务器：
+yum -y install vsftpd;
+service vsftpd status;  或者systemctl status vsftpd;
+service mysqld restart;
+然后：
+vim /etc/vsftpd/vsftpd.conf;
+去掉这2行注释:
+anon_upload_enable=YES
+anon_mkdir_write_enable=YES
+保存，然后重启vsftpd服务：
+systemctl restart vsftpd;
+========================
+linux安装ftp: 未完成
+yum -y install vsftpd;
+systemctl restart vsftpd;
+systemctl status vsftpd;
+
+vim /etc/vsftpd/vsftpd.conf;
+去掉所有chroot前面的#
+
+useradd ftp_user;
+passwd 1234; #设置密码
+
+#将新用户添加到这2个文件中
+vim /etc/vsftpd/user_list;:
+vim /etc/vsftpd/chroot_list;
+
+chmod 777 /var/ftp/pub;
+========================
+------------------------------------------
+yum -y install ftp;  #在另外服务器上安装ftp
+输入:
+ftp 47.94.203.224;  用户名输入： anonymous  密码：直接回车
+出现ftp>   表示连接成功。
+--------------------------------------------
+get　a.txt  a_local.txt;   #从ftp服务器  复制a.txt到本机为a_local.txt
+===========================================
+ftp 10.138.87.68  连接ftp，然后输输入账户，密码  出现ftp>  即可
+ftp> status     查看状态
+ftp> system    显示远端主机系统类型.
+
+
+
+
+
+
+
+
+
+
+
+
+
+cat import1.csv query_result.csv query_result.csv |sort |uniq -u >c.csv
+cat import1.csv query_result.csv | sort| uniq -d >jiaoji.csv
+cat a.csv b.csv | sort| uniq -d >jiaoji.csv
+
+
+
+
+find -ctime  -1      1天以内
+find -ctime  +10     10天之外
+
+
+
+
+awk '{$1="";print $0 > "b.txt"}' b.txt    awk 删除第一列，$1=""置空第一列
+sed -e 's/[^ ]*//' b.txt   sed 删除第一列      [^ ]*  是所有非空格的行
+
+mkdir -p xxx/{x1,x2,x3}      创建子目录
+mkdir -p xxx/x1/x2/x3   子目录结构为上下级（xxx-->x1-->x2-->x3）
+mkdir test3 -m 711   #创建带有权限的目录   -m 是mode的意思(设置模式)
+
+lslogins   显示所有用户
+
+>a.txt   删除大文件,效率比较高
+
+watch uptime  动态监控，默认2秒   watch 每隔n秒 运行一次命令
+watch -n 1 uptime    每一秒显示系统负载
+watch -t uptime  不显示标题
+watch -n 1 "df -i;df"   后面可以跟组合命
+
+look -f adsfa a.txt    忽略大小写，查找开头是... 的行
+
+help   显示所有命令
+
+mv a.txt a2.txt      重命名
+rename a.txt a1.txt a.txt       rename是批量重命名语法，第三个参数是重命名哪些文件
+rename "a" "g" a*.txt       重命名中的哪些字段
+rename .htm .html *.htm   一个很典型的应用就是批量修改后缀名
+mmv \*shk\*.\*  shk#2#1.#3   # 文件名为: "我的shk-001.mp4"
+
+echo "我的shk-001.mp4" | awk -F '.' '{printf index($0,"shk")}'
+echo "我的shk-001.mp4" | awk -F ',' '{split($0,arr,"\.");name=arr[1];fix=arr[2];  split(name,arr2,"shk");name1=arr2[1];name2print name}'
+
+split( String, A, [Ere] )
+--------------------
+rename foo foo0 foo?
+rename foo foo0 foo??     原名是foo1,[改完之后变为]  foo001
+--------------------
+echo "1+1" | bc     bc是计算命令
+----------------------
+bc计算如何保留小数点:
+默认scale是0  如果要保留2位小数   在bc界面,输入 scale=2
+然后输入 1/2  结果是 0.50
+要查看小数位置设置的多少直接输入 scale 结果 是几就是 几位小数
+-----------------------------
+
+echo "sqrt(100)" | bc    开方/平方根
+
+date2=`date`;echo date2;  反引号表示命令替换
+date2=$(date);echo date2;   $()也表示变量替换
+aaa=111;echo "abc${aaa}def";  $aaa和${aaa}一样，为的是定界符
+
+``和$():  $()支持嵌套，推荐
+
+readonly aaa     只读变量
+unset aaa         删除变量，不能删除只读
+
+/etc/profile 和.bash_profile 和export ： /etc/profile 是全局永久有效 ,.bash_profile是对该用户永久有效,export 对当前shell有效
+
+单引号和双引号，反引号：  单引号仅被看作字符串，双引号允许变量扩展和转义字符，反引号当作指令来执行
+-------------------------------------
+bash快捷键:
+ctrl+a 或者 home   跳到开头  （同于vi中的shift+^）
+ctrl+e 或者 end   跳到结尾    （同于vi中的shift+$）
+ctrl+f 或者 右箭头  光标向前一个字符
+ctrl+b 或者 左箭头  光标向后一个字符
+alt+f  或者 ctrl+左  光标向左一个单词
+alt+b  或者 ctrl+右  光标向右一个单词
+
+-----------------------
+bash命令行的快捷键:
+ctrl+u    从光标删除到开头 （其实是剪切）
+ctrl+k    从光标删除到结尾  (也是剪切)
+ctrl+w    删除前一个单词
+alt+d     删除后一个单词
+ctrl+?    撤销一次输入
+tab 或者 ctrl+i 自动补全
+
+ctrl+r    向前(恢复)一次动作(是在vi中的命令，要先用u撤销才可，否则已经是最新了)
+
+ctrl+s    挂起shell,就无法输入了
+ctrl+q    撤销挂起
+
+clear 和ctrl+l 和reset:  clear=ctrl+l,reset会重置所有
+
+chmod -R 777   的隐患，一般是在tomcat权限中。  建议用 chown root:root a.txt
+cat start.log |grep "2018-04-20 15:[3-9][0-9]"      30分钟以上的内荣
+
+ifconfig 或者 netstat -ie   查看ip地址
+iwconfig  查看无线网络       和 /sbin/ifconfig一样
+
+ssh 10.138.87.68
+ssh -l haieradmin 10.138.87.68          -l是login_name
+ssh -l haieradmin -p Hr@Init!  10.138.87.68    错误示范，-p是端口不是passwd
+/etc/ssh/sshd_config 中 X11Forwarding yes  允许使用ssh
+
+ssh root@47.94.99.71 bash < /root/test.sh    远程运行命令
+-----------------------------
+ssh验证文件专门的拷贝命令:
+ssh-copy-id root@47.94.99.71  #  71服务器免密登录 默认是用的id_rsa和id_rsa.pub这一对
+ssh-copy-id -i id_rsa_71.pub root@47.94.99.71  #  71服务器免密登录(指定文件)  -i是identity-file  用来设置验证文件的  把本机的公钥复制到远程主机,这样就可以直接登录71了
+
+ssh-copy-id -i id_rsa.pub root@47.94.99.71
+ssh-copy-id -i id_rsa.pub root@47.94.203.224
+
+
+ssh连接报错: ECDSA host key "ip地址" for  has changed and you have requested strict checking
+执行ssh-keygen -R "远程ip" ,清除远程服务器缓存的公钥信息
+-----------------------------
+ssh密码次数过多禁用：
+vim /etc/hosts.allow;
+添加一行内容： sshd:ALL
+service sshd restart;
+-----------------------------
+ssh分析：
+a-->b   a向b发请求
+b的authorized_keys文件中，看是否有a主机的pub。 如果有的话，用a的pub加密asdfjaksdjfkasdjfasdasdf;发送给a
+a收到后，用id_rsa解密，发送给b，b一看是对的。那么就建立链接。
+小结: a-->b （先看a是不是在b的信任列表里）       如果是伪装呢，只有你拿着配对的钥匙才说明你是，所以我发个加密的string过去。你用配对的钥匙解密，对的话才链接。
+-------------------------------
+通过其他端口链接：
+vim /etc/ssh/sshd_config; #找到Port 22   再添加一行Port 10086，保存     systemctl restart sshd; #重启服务
+ssh -p 10086 root@47.94.99.71 ; #  -p 10086 指定端口链接
+----------------------------
+ln -s a.txt a.lnk 链接
+fdisk -l  查看硬盘
+
+route 显示路由表
+traceroute  www.baidu.com  或者 traceroute 112.34.112.40    显示经过的路径
+traceroute -m 2 www.baidu.com   跳数改为2
+traceroute -n baidu.com     显示IP地址，不查主机名。
+traceroute -w 3 baidu.com   等待时间设置为3秒
+traceroute -q 2 baidu.com   探测包个数
+traceroute -p 6888 baidu.com    探测包使用的基本UDP端口设置6888
+mtr baidu.com   动态监控
+mtr -r baidu.com    report形式监控(不是动态监控)
+ab 命令 是服务器的性能测试工具
+
+od -c filename   以ascii形式显示文件
+
+ls -l `(find -mtime -1 -type f)`   修改时间在一天内的文件，注：要加-type f,否则 .会被查询出来，那么就会显示很多
+---------------------------------
+if例子：  if test的test相当于[[]]
+a=1;
+b=2;
+if test 2 -eq 1
+then echo "NO.1 = NO.2"
+elif test $a -gt $b
+then echo "NO.1 > NO.2"
+else echo "NO.1 < NO.2"
+fi
+-------------------------------------
+if例子2：
+if [[ 2 -gt 1 ]];then
+    echo "Hello, Stephen."
+else
+   echo "asdf"
+fi
+-------------------------------------
+bash如何给boolean赋值:
+b=`test 1 -eq 1`;   这样是不对的,因为test命令是执行表达式的值,并退出 将表达式的值作为返回的code
+`test 1 -eq 1`;
+b=$?;
+echo $b;
+-----------------------------
+bash function例子：
+foo(){
+    echo Jay
+}
+result="$(foo)"
+echo $result
+exit 0
+----------------------
+判断是否是文件：
+if  test -f a.txt;then
+echo "yes"
+fi
+-----------------------
+判断是否是文件: 左右括号 要和内容分开，否则会当成同一个字符串，报错
+if  [ -f a.txt ];then
+echo "yes"
+fi
+-----------------------------
+exit 0和exit 1有什么区别: 0是正常退出  1是错误退出
+------------------------------
+字符串处理:   ${#str}  参数扩展:
+str="abcddddefg"
+echo ${str}   原字符串
+echo ${#str}      长度
+echo ${str:2}   下标2到以后的字符串
+echo ${str:2:2}   下标2往后2个字符
+echo ${str/a/g}     a替换为g
+echo ${str//d/g}    所有的d都替换为g
+
+echo ${str#*d}    从左边删除到第一个d字符
+echo ${str##*d}   从左边删除到最后一个d字符
+echo ${str%d*}   从右边删除到第一个d         注意*号在左边还是在右边
+echo ${str%%d*}   从右边删除到最后一个d
+
+-----------------------
+参数扩展转换大小写:
+string="CHUshiyun"
+^转换为大写
+^^ 全部转换为大写
+,转换为小写
+,, 全部转换为小写
+echo ${string^*}
+echo ${string^^*}
+echo ${string,*}
+echo ${string,,*}
+echo ${string^^u}
+
+------------------------
+参数的替换:
+string="chushiyun"
+echo ${string/u/z}   #只替换第一个
+echo ${string//u/z}  #全局替换  pattern加个/即可
+echo ${string/#ch/z} #前缀匹配
+echo ${string/%un/z} #后缀匹配
+arr=(chu shi yun);
+echo ${arr[@]/u/z}
+----------------------
+${file#*/}	拿掉第一条 / 及其左边的字符串	dir1/dir2/dir3/my.file.txt
+${file##*/}	拿掉最后一条 / 及其左边的字符串	my.file.txt
+${file#*.}	拿掉第一个 . 及其左边的字符串	file.txt
+${file##*.}	拿掉最后一个 . 及其左边的字符串	txt
+${file%/*}	拿掉最后一条 / 及其右边的字符串	/dir1/dir2/dir3
+${file%%/*}	拿掉第一条 / 及其右边的字符串	(空值)
+${file%.*}	拿掉最后一个 . 及其右边的字符串	/dir1/dir2/dir3/my.file
+${file%%.*}	拿掉第一个 . 及其右边的字符串	/dir1/dir2/dir3/my￼
+
+
+# 是去掉左边(在键盘上 # 在 $ 之左边)
+% 是去掉右边(在键盘上 % 在 $ 之右边)
+单一符号是最小匹配;两个符号是最大匹配
+*是用来匹配不要的字符，也就是想要去掉的那部分
+还有指定字符分隔号，与*配合，决定取哪部分
+
+arr=(aaaa bbb ccc)  #注 linux数组以空格分隔  如果写为aaa,bbb,ccc  那么只是一个元素
+echo ${arr[*]}  或者 echo ${arr[@]}  数组所有元素
+echo ${#arr[*]}    数组长度
+echo ${arr[0]}   第一个元素
+echo ${arr[@]}  @符号可以获取数组所有元素
+echo ${!arr[@]} !表示打印数组的keys
+---------------------------------
+arr=(aaa bbb ccc ddd eee);
+echo $arr; #不是证书组  是数组第一个元素
+echo ${arrrr[*]}  或者echo  ${arrrr[@]} #整个数组
+echo ${#arr[@]}  数组长度
+unset arr;  #清空数组
+arr[1]=100;echo ${arr[*]}   #修改数组元素
+unset arr[1];   #清空某个数组元素
+---------------------------------
+arr[0]=aaaaa   重新赋值第一个元素
+------------------------------------------------------
+cat a.txt | xargs      默认是echo，换行会被空格替代
+cat a.txt | xargs -n 3  传递几个参数作为一行(-n max-args 一次性最多传递多个参数)
+cat a.txt | xargs -t 3   -t表示先打印命令，然后再执行
+cat a.txt | xargs -dX   自定义定界符，遇到定界符 就换分隔成为多列   将输入根据定界符分割之后，再用-n组合，决定执行次数
+cat a.txt | xargs -I {} ./b.txt -p {} -l   b.txt文件中的每行都会当作参数  传递到后面来执行
+echo 1234 |cat 和 echo 1234 |cat a.txt 区别： 参数优于stdin，也就是没有参数的话，就会从stdin获取参数
+echo '--help' |cat 和 echo '--help' |xargs cat:  xargs将前面输入流，当作命令参数传递到后面
+echo '11 22 33' | xargs -E '33' echo     -E排除参数  exclude，-E只有在xargs不指定-d的时候有效，如果指定了-d则不起作用，而不管-d指定的是什么字符，空格也不行。
+xargs 默认命令是echo，如果后面不加命令，那么就echo
+xargs和exec: 都是把前面的输出作为后面命令的参数,xargs可以用-n控制个数,exec是一个一个传递的,可以使用{}指代前面的参数.
+find  -type f  -name a.txt -exec ls -l {} \;
+{} \; 是什么意思 {}表示前面的内容,      \;转义为语句的终结     注i意{}和\;之间有空格
+
+
+touch -m "2016-05-04 12:00:00" a.txt
+touch -a "2016-05-04 12:00:00" a.txt
+touch -d "2016-05-04 12:00:00" a.txt
+change time即使修改了也不好变
+
+find -type f \( -newermt '2018-04-23 00:00' -a -not -newermt '2018-04-23 23:59' \)        查找时间段-根据时间字符串
+ls -l `(find -type f \( -newer a.zzz -a -not -newer a.txt \))`        查找时间段-根据2个文件
+echo 1234 | vim -        -表示调整输入
+
+find -type f -name a.txt -exec  ls  -l {};
+xargs默认命令是echo，如果后面不加命令   那么就echo
+
+ip link list   link列表
+ip route list   路由列表
+ip neigh list   邻居列表
+
+dig www.baidu.com   查看域名      dig不是自带命令，需要安装bind-utils，answer section: 这里可以看到ip           yum -y install bind-utils
+
+
+
+free -m     内存
+vmstat  内存
+dstat -m   监控内存            yum install -y dstat 要安装
+dstat -c    监控cpu
+dstat -d   监控磁盘
+dstat -n    监控network
+dstat -s    监控swap
+lscpu   # 查看cpu
+lsmem   # 查看内存
+
+---------------------------------------------
+scp可以   从本机到远程，可以从远程到本机     看前后顺序即可
+scp  a.txt 10.138.87.68:/crmdata/crm-business/logs  远程复制a.txt  到 68服务器上logs目录
+scp a.txt root@10.138.87.68:/crmdata/crm-business/logs  root@10.138.87.68   带用户的地址
+scp -r ./ scp a.txt root@10.138.87.68:/crmdata/crm-business/logs 目录下的所有文件都复制到目录下     -r递归
+scp -r ./ scp a.txt root@10.138.87.68:/crmdata/crm-business/logs 目录下的所有文件都复制到目录下
+scp -rv root@10.138.87.68:/crmdata/crm-business/logs/zzz333.txt ./            -v  verbose   打印详细信息    从远程复制到本机
+
+
+scp -r root@47.94.203.224:/root/apache-tomcat-7.0.64.tar.gz ./
+
+scp a.txt root@10.138.87.68:/crmdata/crm-business/logs  root@10.138.87.68
+
+socket统计命令
+ss -a      -a所有套接字
+ss -l       -l listening
+ss -p       -p  process
+ss -u        udp
+ss -t -a     所有tcp套接字
+ss -pl |grep 3306
+
+aasfdad;echo 1      连续执行2条命令，无论是否成功
+aasfdad && echo 1     命令1成功，才执行命令2
+asdfaf || echo 2    命令1不成功，才执行命令2
+echo 1 || echo 2    命令1不成功，才执行命令2
+echo 2 &     运行一个子命令    echo 2 这个命令会放到后台运行
+
+cat ~/.mysql_history     mysql操作记录文件
+cat /home/mysql/.bash_history
+------------------------------------------
+/usr/local/bin 和/usr/bin:      usr是unix    system resource 是系统资源，不是user。 再/usr/bin下的会随系统升级而覆盖，/usr/local/bin下的不会
+/usr/local/bin 和/usr/bin的优先级： echo $PATH：  结果:/opt/jdk1.7/bin:/usr/lib64/qt-3.3/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin   /usr/local/bin优先级比/usr/bin高
+----------------------------------------
+which mysql     mysql的执行文件在哪里
+whereis mysql
+ps aux |grep mysql
+yes "adfadsf"      重复打印string，如果后面什么都不跟  就一直打印“y”
+报错: Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock'  ---mysql.sock文件的地址不对，需要用-S指定
+如果通过-h来连接就不会有这个问题 ：mysql -u root -p -S /data10/data/mysql/socket/mysql.sock
+
+cal 5 2017       显示某月的日历
+
+$((5+*3*3))
+
+$(()) 和$() 和``:  ``和$()是命令替换        echo  $((2+3*2))是公式计算
+
+alias和unalias： alias ii="ls -l";   unalias ii
+alias 命令查看当前作用的alias
+alias cp ; #查看cp的alias
+
+curl www.baidu.com    访问某个网址
+curl -o index2.html www.baidu.com 下载文件到新文件
+curl -O www.baidu.com      下载到默认文件（实测curl: try 'curl --help' or 'curl --manual' for more information）
+curl --limit-rate 1000B www.baidu.com   限速  --limit-rate
+curl -u ftpuser:ftppass www.baidu.com 从ftp下载
+curl -u ftpuser:ftppass -T myfile.txt ftp://ftp.testserver.com 上传
+curl -v www.baidu.com      详细信息
+curl -x proxysever.test.com:3128 http://google.co.in   代理(需要有代理主机和端口)
+curl -u username https://api.github.com/user?access_token=XXXXXXXXXX      get请求
+curl -u username --data "param1=value1&param2=value" https://api.github.com    post请求
+-----------------------------
+查看外网ip
+curl -s icanhazip.com    -s(silent)是静默模式   icanhazip.com    是查看外网ip的网址
+curl icanhazip.com
+curl ifconfig.me
+curl curlmyip.com
+curl ip.appspot.com
+curl ipinfo.io/ip
+curl ipecho.net/plain
+-------------------------------
+
+下载并保存为自定义名字： curl -o index.html http://www.baidu.com
+下载并保存为默认名： curl -O http://www.baidu.com    (不好用，提示没有默认名)
+
+
+jenkins部署报错： Failed to connect and initialize SSH connection. Message: [Failed to connect SFTP channel. Message [java.io.IOException: Pipe closed]]     无法连接ssh，很有可能是密码过期。
+
+tomcat没有权限： chmod -R 777 /root/apache-tomcat-7.0.57
+rz  command not found:     安装rz，sz即可   yum -y install lrzsz
+
+route add default gw 192.168.0.1
+-------------------------------------------------
+systemctl unit-list-files |grep iptables      查看安装的服务
+systemctl status iptables.service     查看服务状态
+yum install iptables-services       安装iptables
+iptables -nL --line-number          查看路由规则
+iptables配置文件的位置 /etc/sysconfig/iptables         配置完毕之后，执行service iptables restart
+-----------------------------------------------
+关闭端口:   iptables -A INPUT -p tcp --dport 3306 -j DROP; systemctl restart iptables.service;
+换个主机执行  telnet 47.94.99.71 3306
+开放端口:   iptables -A INPUT -p tcp --dport 3306 -j ACCEPT; systemctl restart iptables.service;
+iptables-save >/etc/sysconfig/iptables       保存(只重启并没有作用)
+换个主机执行  telnet 47.94.99.71 3306
+
+iptables -n -L     查看所有规则
+iptables  -F   或者 iptables --flush          清空所有规则
+
+iptables -A INPUT -p icmp --icmp-type 8 -j ACCEPT
+iptables -A INPUT -m  NEW -m tcp -p tcp –dport 3306 -j ACCEPT
+
+iptables --flush
+iptables -A INPUT -j DROP     拒绝所有
+-----------------------------------------------
+yum -y install bash-completion  bash-completion-extras         增强tab补全
+
+不能直连数据库： 1、开放3306端口   2、mysql中设置开放
+
+安全组规则：
+0.0.0.0/0 表示所有ip地址
+-1/-1 表示端口段，如8080/8090表示从8080到8090
+
+cidr (classes inter-domain routing) 无类别 域间路由 ---表示一个路由段   相应的掩码表示为：11111111 11111111 11111100 00000000即该CIDR的掩码为：255.255.252.0
+
+byte和 比特(bit)  1byte等于8比特(bit)
+
+
+a类地址： 最高位是0 网络号是7位  范围是(0000 0000 到 0111 1111) 0-127
+b类地址： 最高为是10 网络号是14位 范围是(1000 0000 255 到 1011 1111 255) 128-191
+c类地址： 最高为是110 网络号是21位  范围是(1100 0000 255 255到 1101 1111 255 255) 192-223
+
+find / -name "zoo.cfg" | xargs grep "elk"
+telnet 47.94.203.224 8080  远程连接某个端口
+
+ping 和telnet:   ping localhost     telnet要加端口： telnet localhost 2181
+ping -c 4 www.baidu.com              linux ping是一直发的，-c 表示发送个数
+=========================================================
+redis 命令后面不要写分号，容易把分号当做字符串保存进去
+yum list installed |grep redis        redis是否安装
+telnet localhost 6379      redis是否启动      或者  systemctl status redis
+/etc/redis.conf         redis配置文件
+systemctl start redis     启动redis
+systemctl stop redis     停止redis
+systemctl restart redis
+telnet 无法连接redis:  cat /etc/redis.conf  |grep 127    发现bind 127.0.0.1  改为0.0.0.0,重启即可(这样其实不对，实际应该注释掉bind这一行即可)
+
+redis报错(DENIED Redis is running in protected mode because protected mode is enabled, no bind address was specified, no authentication password is requested to clients）：
+redis.conf中的protected-mode yes   修改为  protected-mode no即可。
+
+
+/usr/bin/redis-cli  启动redis客户端
+
+设置密码:
+vim /etc/redis.conf
+查找requirepass字段   去掉前面注释，改为  requirepass 1234  ，表示密码是1234
+
+systemctl restart redis;  # 重启     注意，这里其实不用重启，新打开一个客户端，密码就生效了
+/usr/bin/redis-cli   # 打开客户端(注意，设置了密码，客户端仍然是可以连接的，只不过操作的时候才会提示没有权限)
+keys *    提示(error) NOAUTH Authentication required.
+
+/usr/bin/redis-cli -a 1234； # -a表示密码
+keys *    # 这次是正常查询了
+
+
+keys *    #查看所有    keys支持简单的通配符
+keys *name*  #查看所有包含name的
+keys ?ame*    # 问号通配符
+keys [nm]ame*
+
+
+set name chushiyun  # set值
+get name #　get值
+exists name   #是否存在某个值
+type name    #查看key类型
+randomkey   #随机返回一个key
+
+
+rename name name-new   #重命名  如果已经有name-new 会覆盖
+get name-new
+renamenx name name-new   #  没name会报错， 已经有name-new 的话，不会覆盖
+
+
+
+
+append name hello  # append 返回新的string的长度, 如果不存在，会创建这个string
+append name world
+get name;
+
+getrange name  0 3       #获取下标0-3的字符串(右边是闭区间) 相当于substring
+
+
+set num 100  # incrby 自增
+incrby num 5 # 返回值是105
+
+set num 9  #  decr  自减
+decr num
+
+expire name  30    #设置过期时间，单位（秒）
+ttl name  #  -1表示没有设置过期时间   -2表示已经过期   其他值表示剩余的过期时间
+
+expireat name 2003004000   #  设置at 某个时间戳过期，单位(秒)
+ttl name
+如果要设置毫秒值，前面加p即可    pexpire  pexpireat  pttl
+
+persist name    #持久化对象，使其用不过期
+ttl name    # -1 表示永远不过期
+
+
+object refcount name  #查看有几个引用
+object idletime  name  #空闲了多久了
+get name  # get可以刷新空闲时间
+object idletime name #  发现空闲时间从新开始计算了
+object encoding name  #查看编码 默认是embstr
+object encoding age   # 如果数字的话返回int
+
+dump
+restore
+
+dbszie   # 查看数据库大小
+flushdb  # 清空所有key
+
+
+
+
+
+
+list用法：
+lpush list guanyu   # 左插入一个元素
+lpush list zhangfei machao huangzhong  # 左插入多个元素
+llen list  # 数组长度
+lrange list 0 -1   # 查看所有元素
+lindex list 2   # 查看某个下标的元素
+lset list 0 caocao  # 修改某个下标的元素
+
+lpushx list99 banana  # 列表存在才才插入，否则不插入
+
+hash用法:
+hset map1 key1 value1
+hset map1 key2 value2
+hget map1 key1    #  get某个元素
+hgetall map1     # 获取所有元素， map中的元素是以奇偶行来存储数据的，奇数行key，偶数行value
+hdel map1 key1  # 删除元素
+hexists map1 key1    # 是否存在元素
+hsetnx map1 key100 redis    # 如果not exists 就设置值，已经存在的话，不进行任何改变
+hmset map1 new-key1 luocheng new-key2 luotong  # set多个元素
+hkeys map1  # 查看所有key
+hvals map1  # 查看所有values(注意写法是hvals  不是hvalues)
+
+
+hmset map1 new-key1 luocheng new-key2 luotong  # 批量set多个元素
+hmget map1 key2 new-key1  # 批量get
+
+set用法:
+sadd wei caocao
+sadd wei xuchu
+sadd wei guojia
+sadd wei caocao xuchu guojia    #一次添加多个
+smembers wei
+
+sadd shu liubei
+sdiff wei shu
+sdiffstore new-store wei shu
+
+sortedset用法：
+zadd wei caocao xuchu guojia
+
+redis和jedis的区别??
+redis是缓存数据库， jedis是java操作redis的api。
+
+redis查看当前数据库??
+连接后面有个中括号[1],表示的就是1号数据库
+
+redis 默认有几个数据库??
+16个，从0-15都是可选的。  如果select 16，会报错(error) ERR invalid DB index
+
+ping命令如果返回pong，表示连接成功。
+
+redis有什么好的可视化工具??
+redisdesktopmanager
+https://github.com/uglide/RedisDesktopManager    这是git地址   但是不知道怎么用
+
+https://share.weiyun.com/5gfojZX
+https://share.weiyun.com/5gfojZX
+
+
+======================================================================
+yum -y install mariadb mariadb-server      // mariadb 和  mariadb-server  都要有
+yum -y remove mysql mysql-server
+报错： Failed to restart mariadb.service: Unit not found.     安装依赖yum install mariadb-embedded mariadb-libs mariadb-bench mariadb mariadb-sever
+yum -y remove sl.x86_64
+systemctl stop mariadb; systemctl restart mariadb;
+mysql_secure_installation    配置mysql
+mysql -uroot -p; 登录
+授权远程登陆：
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '1234' WITH GRANT OPTION;
+flush privileges;
+mysqladmin -u root -p password 1234; #mysql改密   其实-p后跟的是旧密码  不写也是  (这里为什么写ex就可以   1234有的时候就报错)
+=====================================================================
+useradd chushiyun       用户默认  创建在/home/chushiyun
+passwd chushiyun      设置密码和修改密码都是这个命令
+passwd -l  chushiyun  锁定用户
+passwd -u  chushiyun  解锁用户
+passwd -S chushiyun  查看用户的密码状态
+
+修改用户默认路径;：
+useradd liulili -d /home/define/liulili       # 不推荐这种方式 ，推荐使用usermod的方式
+usermod -d /usr/yaya yaya
+chown -R yaya /usr/yaya    # 不授权的话只能看，不能创建文件和执行文件
+但是登录后会出现这个 -bash-4.2$  说明这个目录下没有 .bash_logout  .bash_profile  .bashrc 等文件，拷贝过来即可 ，所以说最好用户还是在默认目录下好。
+
+
+
+
+提示：usermod: user yaya is currently used by process 17910     # usermod修改用户主目录的时候报的错  说明有窗口正在用这个用户，关闭即可
+
+--------------------------
+sudo adduser -g wheel chushiyun          # 添加有管理员权限用户
+sudo usermod -G wheel chushiyun          # 追加管理员权限
+=================================
+yum -y install ImageMagick.x86_64     图像编辑工具
+convert -version
+convert -resize 150x200 a.png b.png      b.png 是转换后的图片  转为指定大小的图片
+convert -sample 50%x50%  a.png  d.png    缩放
+报错: convert: no images defined `a.png' @ error/convert.c/ConvertImageCommand/3046.      没有写b.png
+identify a.png       查看图片属性 （类型，宽高，大小等）
+convert a.png c.jpg       类型转换
+convert -sample 50%x50%  a.png  e.png
+convert -resize 800x800 -quality 50 a.png 800.jpg      缩减质量
+　for %f in (*.jpg) do convert "%f" %~nf.png"        批量图像格式转换
+===========================================
+ifconfig -a  或者 cat /proc/net/dev           查看网卡（主要看网卡名称，ip地址，物理地址，tx/sx）
+ifup eth0    启动eth网卡
+ifdown eth0       关闭eth0网卡
+
+man  / +string   向下搜索，直接输入string向上搜索
+man ls |grep "\-l"           man命令查看某个具体的参数
+-------------------------------------
+ssh localhost 失败
+ssh-keygen -t rsa;
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys;
+ssh localhost; #输入一次密码，下次就不用了
+
+ssh免密登陆(a-b)，退出远程登陆(id_rsa_224.pub是为了不覆盖其他机器上的) 71服务器上执行：
+ssh-keygen -t rsa   生成key    位置在  /root/.ssh/id_rsa.pub
+scp  /root/.ssh/id_rsa.pub 47.94.99.71:~/.ssh/id_rsa_224.pub      拷贝到远程用户目录
+ssh 47.94.99.71 'cat ~/.ssh/id_rsa_224.pub >> ~/.ssh/authorized_keys'      >> 表示添加  将公钥添加到~/.ssh/authorized_keys
+ssh 47.94.203.224     从71访问224
+
+scp  /root/.ssh/id_rsa.pub 47.94.99.71:~/.ssh/id_rsa_200.pub
+
+
+ssh免密登陆(b-a)  224服务器上执行：
+ssh-keygen -t rsa   生成key    位置在  /root/.ssh/id_rsa.pub
+scp  /root/.ssh/id_rsa.pub 47.94.203.224:~/.ssh/id_rsa_71.pub      拷贝到远程用户目录
+ssh 47.94.203.224 'cat ~/.ssh/id_rsa_71.pub >> ~/.ssh/authorized_keys'      >> 表示添加  将公钥添加到~/.ssh/authorized_keys
+ssh 47.94.99.71   从224访问71
+
+
+224本机免密登陆
+cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
+71本机免密登陆
+cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
+-------------------------------------
+另外一种免密登录写法：
+224执行：(71就认识224了)
+ssh-keygen -t rsa -C "47.94.203.224" -f ~/.ssh/id_rsa_224;
+scp  /root/.ssh/id_rsa_224.pub 47.94.99.71:~/.ssh/id_rsa_224.pub;
+ssh 47.94.99.71 'cat ~/.ssh/id_rsa_224.pub >> ~/.ssh/authorized_keys';
+ssh 47.94.203.224;
+71执行：
+ssh-keygen -t rsa -C "47.94.99.71" -f ~/.ssh/id_rsa_71;
+
+-------------------------------------
+社交分析:
+先配置65到224免密登录:
+scp /root/.ssh/id_rsa.pub 47.94.203.224:~/.ssh/id_rsa_65.pub   #将65公钥发送到224服务器
+cat ~/.ssh/id_rsa_65.pub >> ~/.ssh/authorized_keys   #在224服务器将65公钥添加到信任列表
+ssh 47.94.203.224       #65到224已经可以免密登录了
+
+/user/hive/warehouse/social_analysis.db/text_analysis  概况
+/user/hive/warehouse/social_analysis.db/day_base_member_id  日
+/user/hive/warehouse/social_analysis.db/month_base_member_id  月
+/user/hive/warehouse/social_analysis.db/year_base_member_id  年
+
+65服务器上执行:
+touch /root/social_analysis.sh;   chmod -R 755 /root/social_analysis.sh;  chmod -R 755 /root/social_analysis2.sh;
+vim /root/social_analysis.sh;   #编辑脚本内容如下
+
+rm -rf /root/text_analysis/*;
+rm -rf /root/day_base_member_id/*;
+rm -rf /root/month_base_member_id/*;
+rm -rf /root/year_base_member_id/*;
+hadoop fs -get /user/hive/warehouse/social_analysis.db/text_analysis;
+hadoop fs -get /user/hive/warehouse/social_analysis.db/day_base_member_id;
+hadoop fs -get /user/hive/warehouse/social_analysis.db/month_base_member_id;
+hadoop fs -get /user/hive/warehouse/social_analysis.db/year_base_member_id;
+
+
+scp /root/text_analysis/000000_0 root@47.94.203.224:/root/social_analysis/text_analysis.csv;    #scp默认是覆盖的
+scp /root/day_base_member_id/000000_0 root@47.94.203.224:/root/social_analysis/day_utf8.csv;
+scp /root/month_base_member_id/000000_0 root@47.94.203.224:/root/social_analysis/month_utf8.csv;
+scp /root/year_base_member_id/000000_0 root@47.94.203.224:/root/social_analysis/year_utf8.csv;
+
+crontab -e; #打开定时任务编辑器
+0 8 * * *  /root/social_analysis.sh;   #每天8点执行
+
+下面是224服务器上的内容:(text_analysis.csv因为直接展示,所以不需要转码)
+sed -i '1i\姓名,微店主ID,日交互数,日开发数,日销额,日得分'  /root/social_analysis/day_utf8.csv;
+sed -i '1i\姓名,微店主ID,月交互数,月开发数,月销额,月得分'  /root/social_analysis/month_utf8.csv;
+sed -i '1i\姓名,微店主ID,年交互数,年开发数,年销额,年得分'  /root/social_analysis/year_utf8.csv;
+iconv -f UTF-8 -t GBK -c /root/social_analysis/day_utf8.csv  -o /root/social_analysis/日分析.csv;
+iconv -f UTF-8 -t GBK -c /root/social_analysis/month_utf8.csv  -o /root/social_analysis/月分析.csv;
+iconv -f UTF-8 -t GBK -c /root/social_analysis/year_utf8.csv  -o /root/social_analysis/年分析.csv;
+mail -s "社交分析概况" -a /root/social_analysis/日分析.csv -a /root/social_analysis/月分析.csv -a /root/social_analysis/年分析.csv -c chushiyun@ehaier.com  dangjuntao@haier.com  xiangyi.pp@haier.com wangyingying@haier.com < /root/social_analysis/text_analysis.csv;  #记得-c添加抄送人
+crontab -e 打开定时任务编辑器
+30 8 * * * /root/social_analysis/social_analysis.sh   #每天8:30发送邮件
+
+测试的时候只发给自己:
+mail -s "社交分析概况" -a /root/social_analysis/日分析.csv -a /root/social_analysis/月分析.csv -a /root/social_analysis/年分析.csv chushiyun@ehaier.com  < /root/social_analysis/text_analysis.csv;  #记得-c添加抄送人
+
+
+* * * * * echo `date +%Y%m%d%H%M%S`  >> /root/cron.txt
+------------------------------------
+* * * * * touch /root/a1234.txt    每分钟创建文件
+touch abc`date +%y%m%d%H%M%S`.txt  创建当前时间文件
+touch abc`date +%y%m%d`.txt  创建当前日期文件
+报错： -bash: cd: OLDPWD not set    cd - 是切换目录的命令     报这个错说明并没有用过cd命令  所以无法切换
+
+grep -a '*Controller*' LabelController.class       -a查找二进制文件中的text
+grep -E ^*b*$ a.txt
+grep yyy -d skip ./*           只搜索文件   --directories=skip 或 -d skip 一样
+grep yyy a.txt -l                --files-with-matches 只输出匹配的文件名
+grep yyy a.txt -n               输出行号
+grep ^$  a.txt          查找空行
+grep -e yyy -e ddd a.txt           -e查找多个模式
+grep yyy a.txt  |grep -v yyy         多条件过滤（通过多个grep）
+grep www.baidu.com  a.txt  |wc -w   有几个匹配的结果  -c可以统计行数 其实不足  加wc -l  更加的灵活
+
+ls | tee out.txt|cat -n   数据重定向到文件和屏幕上
+ls | tee -a out.txt |cat -n                   -a append  默认是覆盖 override
+ls -1 |awk '{print i$0}' i=`pwd`'/';   #列出完整路径
+ls -1; #  每个文件一行
+ls -i;  # 显示inode编号(inode)  多连接的时候可以查看是否同一文件
+systemctl和service和chkconfig??
+systemctl集成了service和chkconfig
+
+systemctl list-unit-files --type=service          查看服务的开机启动
+
+env         查看所有环境变量
+in out error 0 1  2
+
+PATH的作用  所要搜索的命令路径
+echo  "$1"  "$2" ;     ./test.sh  one  two         $1-9 脚本传参   $0是脚本文件的名称
+--------------------------------
+测试语法   一般在脚本中有用到
+[ -d /root/a.txt ];echo $?   -d 是否是dir      0表示对  其他都是错        左右要有空格      $? 表示上一条命令执行后的返回值
+[ -f /root/a.txt ];echo $?     -f 是否是文件
+[ -e /root/a.txt ];echo $?     -e 文件是否存在
+[ -x /root/test.sh ]          有执行权限
+$STRING;[ -z $STRING ];echo $?;      -z  是否是空
+
+------------------------------------------------
+流程控制：
+TEST="/root/ttt.txt"        sh文件中的变量不用$
+if [ ! -e $TEST ]
+then
+touch /root/ttt.txt
+else
+echo 1
+fi
+------------------------
+---------------------------
+#bash 循环输出数组:
+arr=(111 B "C" D)
+for i in ${arr[@]}    #不能直接使用$arr 因为$arr表示 数组第一个元素
+do
+  echo $i
+done
+--------------------------
+bash if例子:
+#!/bin/bash
+num=$0
+if [ $num -lt 5 ]
+then echo "small"
+elif [ $num -gt 5 ]
+then echo "big"
+else echo "medium"
+fi
+-------------------------
+bash 单个中括号 和 2个中括号的区别:
+[[]]  是逻辑判断结构,反正用这个就对了
+[]  不推荐使用
+--------------------------
+bash arr for in 例子:
+#!/bin/bash
+arr=(111,222,333)
+#arr[0]=111;
+#arr[1]=222;
+#arr[2]=333;
+for i in $arr
+do
+  echo ${arr};
+done
+-----------------------
+bash arr for例子:
+
+---------------------------------
+bash报错:  ./test.sh: integer expression expected  传的参数和接受的参数类型不一致
+---------------------------------
+if elif else fi：      ./test.sh 88       88是传入的参数,左右中括号  必须有空格 注意是elif
+#!/bin/bash
+SCORE=77
+if [ $SCORE -lt 60 ]
+then echo "<60"
+elif [ $SCORE -lt 80 ]
+then
+echo "<80"
+elif [ $SCORE -lt 90 ]
+then
+echo "<90"
+else
+echo ">90"
+fi
+
+--------------------
+crontab 中命令最好写在sh中,然后授权,不要直接把命令写在crontab 文件中.
+systemctl status crond   # 查看crontab是否开启,以及如果crond报错了,那么所有的内容如何办
+crontab的文件位置:  vim /var/spool/cron/root
+sh脚本故意写错,例如 >>  写为 >>>
+
+crontab 如果写错了怎么办??  一般如果错了,会发内部哟件,到/var/spool/mail/root 中.  用mail命令查看所有的邮件标题,或者是 cat /var/spool/mail/root (root是用户名)查看所有的邮件内容.
+
+从邮件里面筛选内容: mail中并没有很好的检索命令,  可以通过grep命令多次筛选来实现.
+例如:  cat /var/spool/mail/root  | grep -C 10 "18 Jul 2019" |grep -C  crontab_test
+
+crontab 日志文件路径 /var/log/cron*   # 但是为什么文件都是为空的呀
+crontab 如果发生错误,默认发邮件到邮箱,  如果禁止邮件的话,那么可以通过重定向来实现
+6 * * * * /home/stack/test.sh >>/mylog.log 2>&1  这样如果错误,会重定向到/mylog.log文件中
+
+mail 命令中可以输入的列表:
+h   显示当前的邮件列表
+n   next下一封邮件
+l   list所有可用的命令
+/   搜索包含斜杠后面内容的第一封邮件
+d   删除当前邮件(如果要删除所有邮件内容,可以echo "" > /var/spool/mail/root    或者  sed -i '1,$d' /var/spool/mail/root , -i是inplace,表示修改源文件)
+q或者x  退出mail命令
+
+执行命令的2种方式    bash  test.sh  或者/root/test.sh
+每分钟
+*/1 * * * * /usr/bin/touch /root/abc`date +%y%m%d%H%M%S`.txt
+
+sh脚本拼接字符串:        string="abc"`date +%Y%m%d`
+crontab -e       编辑cron文件，编辑成功会提示installing new crontab      文件中 #可以注释掉
+*/1 * * * * /usr/bin/touch zzz.txt    每一分钟创建zzz.txt文件
+20 10 * * * /usr/bin/touch 10-20.txt  10:20执行
+* * * * * /root/test.sh          每秒执行脚本
+# 注释掉         停止脚本
+*/50 * * * * /root/test.sh        从11点开始 每隔50分钟创建文本      cron不支持  0/5这种形式 会报错
+crontab 和at:       at是一次性的命令
+cron规则：
+* 任意时间
+- 时间段
+,  多个时间
+/ 时间间隔
+
+*/1 * * * * echo `date +%Y%m%d%H%M%S`  >> /root/crontab_test.sh
+
+
+-------------------------------
+
+sleep 1s ;date       睡眠延时
+sleep 2 && echo 2;         &&和分号是有区别的，  &&必须第一个命令正确执行才可以
+
+nethogs         查看网络流量   收发
+ls -l|sort -t $'\t'  -k 1n,1
+
+报错： pvdisplay: command not found                       yum install lvm2
+------------------------------
+报错: ImportError: No module named 'requests.packages.urllib3‘
+执行命令:  pip install --upgrade --force-reinstall 'requests==2.6.0' urllib3
+
+-------------------------------------
+fdisk -l      查看所有分区
+
+
+iptables -I INPUT -p tcp --dport 12345 -j REJECT    拒绝tcp12345端口    -I   insert新增   -p protocol 协议  -j jump 跳转规则
+iptables -L     iptables列表      -L list
+iptables -A INPUT -p tcp --dport 1000:1024 -j REJECT   -A append添加在文件后方  1000:1024  端口范围
+-----------------------------------
+怎样编写一条防火墙策略规则，使得 iptables 服务可以禁止源自 192.168.10.0/24 网段的流
+量访问本机的 sshd 服务（22 端口）？
+执行命令 iptables -I INPUT -s 192.168.10.0/24 -p tcp --dport 22 -j REJECT 即可。
+-----------------------------------
+
+nmcli connection show  查看网络连接
+ssh配置位置   /etc/ssh/sshd_config
+cat sample.csv |awk -F "," '{a[$1" "$2]++}END{for(j in a) print a[j],j}'     1列2列用" "连接放到map a中，j是key，a[j]是次数     -F ","如果不写   默认是空格
+
+
+record 和field  record  field  o和i  output和input
+
+--------------------------------------
+vim中    :set fileencoding   查看编码
+ga  #查看字符编码
+iconv -f GBK -t UTF-8 h5.csv  -o h52.txt          latin1相当于gbk  可以这么转的
+
+iconv -f utf8 -t gbk a.txt  -o az.txt
+
+find . -name "*abc*" -exec rm -rf {} \;      正则表达式删除文件
+exec:      exec 后的参数作为命令来执行
+iconv报错( iconv: illegal input sequence at position 39  ):  加上-c  忽略无效字符  例如: iconv -f GBK -t UTF-8 -c h5_gbk.csv  -o h5.csv
+iconv -f GBK -t UTF-8 h5_gbk.csv  -o h5.csv
+============================================
+老姐手机
+
+systemctl start tomcat      /usr/share/tomcat/webapps
+cd /root/apache-tomcat-7.0.64/bin;
+tail -100f /root/apache-tomcat-7.0.64/logs/catalina.out;
+/root/apache-tomcat-7.0.64/bin/shutdown.sh;
+/root/apache-tomcat-7.0.64/bin/startup.sh;
+/root/apache-tomcat-7.0.64/webapps
+less /root/apache-tomcat-7.0.64/logs/catalina.out;
+
+
+unzip nnn.zip
+zip -r aaa.zip aaa;    zip -r aaa.zip aaa;
+转码：
+iconv -f GBK -t UTF-8 h5x.csv  -o h5.csv  linux转码      latin1相当于gbk  可以这么转的
+
+iconv -f GBK -t UTF-8 h5x.csv  -o h5.csv
+
+iconv -f GBK -t UTF-8 h5_1.csv  -o h5.csv
+iconv -f GBK -t UTF-8 h5_2.csv  -o h5_2_u.csv
+
+
+iconv -f GBK -t UTF-8 h5_gbk.csv  -o h5.csv
+iconv -f GBK -t UTF-8 h5_gbk.csv  -o h5.csv
+iconv -f GBK -t UTF-8 jx-2.csv  -o jx.csv
+iconv -f gbk -t gb2312 -c h5x.csv > h5.csv       这个是转换为在windows上可以打开的
+
+
+awk -F , '{print $0","}' 000.sql > 000_ori.sql
+awk -F , '{print $0","}' 001.sql > 001_now.sql
+
+
+去掉第一列双引号:
+awk -F , '{split($1,a,"[\"]");print a[2]","$2","$3","$4","$5","$6","$7";"$8";"$9";"$10";"$11";"$12";"$13}' h5.csv >h5-int.csv;
+
+
+awk -F , '{split($1,a,"[\"]");print a[2]","$2","$3","$4","$5","$6","$7";"$8";"$9";"$10";"$11";"$12}' h5.csv >h5-int.csv;
+
+awk -F ' ' '{print "(\""$1"\",\""$2"\",\""$5"\",\""$4"\"),"}' ttt4.sql
+awk -F '[\s\t]' '{print NF}' ttt4.sql
+
+注意： awk字符串拼接不支持  string+="a";(应该为string=string"a";) 也不支持string=string+"a"; (应该为string=string"a";)
+
+第一列另存为文件：
+awk -F  , '{print $1}' h5-int.csv > h5-column.csv; #第一列拉出来(step1)
+sort h5-column.csv | uniq -d;    # 找出重复行
+
+awk -F  , '{print $1}' h5-int.csv > h5-column.csv;
+
+use db_springboot_mobile;
+truncate table mobile7;
+LOAD DATA LOCAL INFILE "/root/h5/h5-int.csv"
+REPLACE INTO TABLE db_springboot_mobile.mobile7
+CHARACTER SET utf8
+FIELDS TERMINATED BY ","
+ENCLOSED BY ""
+LINES TERMINATED BY "\r\n";
+
+
+
+
+
+
+
+
+
+
+
+LOAD DATA LOCAL INFILE "/root/h5/xaa"
+REPLACE INTO TABLE db_springboot_mobile.mobile7
+CHARACTER SET utf8
+FIELDS TERMINATED BY ","
+ENCLOSED BY ""
+LINES TERMINATED BY "\r\n";
+
+
+
+LOAD DATA LOCAL INFILE "/root/h5/h-10.csv"
+REPLACE INTO TABLE db_springboot_mobile.mobile7
+CHARACTER SET utf8
+FIELDS TERMINATED BY ","
+ENCLOSED BY ""
+LINES TERMINATED BY "\r\n";
+
+
+awk -F , '{split($1,a,"[\"]");$1=a[2];print $1}' h5.csv > h5-column-int.csv;  # 去掉第一列行号（total）
+sort h5-column-int.csv | uniq -d;     #找出重复数据  如：13831105445
+grep 13831105445 h5-column-int.csv -n;  #找到重复数据所在行,记住行号    如:965124:13831105445
+sed -i '1107189d' h5-int.csv;  # 根据行号删除
+
+use db_springboot_mobile;
+truncate table mobile7;
+LOAD DATA LOCAL INFILE "/root/0813H5/h5-int.csv"
+REPLACE INTO TABLE db_springboot_mobile.mobile7
+CHARACTER SET utf8
+FIELDS TERMINATED BY ","
+ENCLOSED BY ""
+LINES TERMINATED BY "\r\n";
+
+use db_springboot_mobile;
+truncate table mobile7;
+LOAD DATA LOCAL INFILE "/root/h5/h5-int.csv"
+REPLACE INTO TABLE db_springboot_mobile.mobile7
+CHARACTER SET utf8
+FIELDS TERMINATED BY ","
+ENCLOSED BY ""
+LINES TERMINATED BY "\n";
+
+truncate table mobile;
+LOAD DATA LOCAL INFILE "/root/jx5.csv"
+REPLACE INTO TABLE db_springboot_mobile.mobile
+CHARACTER SET utf8
+FIELDS TERMINATED BY ","
+ENCLOSED BY ""
+LINES TERMINATED BY "\n";
+
+vim中    :set fileencoding   查看编码
+导入csv文件到数据库：
+use db_springboot_mobile;
+LOAD DATA LOCAL INFILE "/root/h5_utf8.csv"
+REPLACE INTO TABLE db_springboot_mobile.mobile3_copy
+CHARACTER SET utf8
+FIELDS TERMINATED BY ","
+ENCLOSED BY ""
+LINES TERMINATED BY "\r\n";
+
+create table mobile7_copy select * from mobile7 where 1<>1;
+LOAD DATA LOCAL INFILE "/root/0731-H5/h5.csv"
+REPLACE INTO TABLE db_springboot_mobile.mobile7_copy
+CHARACTER SET utf8
+FIELDS TERMINATED BY ","
+ENCLOSED BY ""
+LINES TERMINATED BY "\r\n";
+
+不重复数据：(=1才对，>1是重复的，我们要的是不重复的)
+drop table if exists mobile3_noduplicate;
+create table mobile3_noduplicate as SELECT * FROM mobile3_copy GROUP BY id HAVING count(id) = 1;
+
+drop table if exists mobile7_noduplicate;
+create table mobile7_noduplicate as SELECT * FROM mobile7_copy GROUP BY id HAVING count(id) = 1;
+
+重复数据：
+drop table if exists mobile3_duplicate;
+create table mobile3_duplicate as SELECT * FROM mobile3_copy GROUP BY id HAVING count(id) >1;
+drop table if exists mobile7_duplicate;
+create table mobile7_duplicate as SELECT * FROM mobile7_copy GROUP BY id HAVING count(id) >1;
+
+
+合并重复和不重复的：(先复制不重复的，再插入重复的---ignore是如果重复就忽略，不是单字段)
+drop table if exists mobile3_temp;
+create table mobile3_temp as select * from mobile3_noduplicate;
+insert ignore into mobile3_temp SELECT * FROM mobile3_duplicate;
+
+drop table if exists mobile7_temp;
+create table mobile7_temp as select * from mobile7_noduplicate;
+insert ignore into mobile7_temp SELECT * FROM mobile7_duplicate;
+
+去掉id左右的双引号：
+drop table if exists mobile_double;
+create table mobile_double as select TRIM(BOTH '"' FROM id) as id, type,area,volte from mobile3_temp;
+
+drop table if exists mobile7_double;
+create table mobile7_double as select TRIM(BOTH '"' FROM id) as id, type,area,volte,apru,mou,dou from mobile7_temp;
+
+然后复制到mobile3，并添加索引:
+drop table if exists mobile3;
+create table mobile3 as select * from mobile_double;
+alter table mobile3 add primary key(id);
+alter table mobile3 change column mobile id varchar(64);     --这句没用 是字段错了改字段的
+
+drop table  if exists mobile7;
+create table mobile7 as select * from mobile7_double;
+alter table mobile7 add primary key(id);
+================================
+sed脚本的例子:
+----------------------
+test.sed文件:
+#!/usr/bin/sed
+1d
+------------------------
+awk -f ./test.sed a.txt    #执行命令调用脚本
+===========================================
+sort -t ',' -k 1 -u h5.csv         $',' 逗号为分隔符   -k 1 根据第一列排序   -u  删除（去重）
+sort -t ',' -k 1  sample.csv
+
+sed -i 's/"//g' h5.csv     去掉所有双引号
+================
+zgrep "adfafsa" total.tar.gz   查看gzip文件中是否包含内容
+
+portmap和rpcbind      centos6.5将portmap改为rpcbind
+
+
+=======================================
+2台服务器挂载：（端口全部放开，防火墙全部关掉，要能ping通）
+yum -y install  nfs-utils
+yum -y install  rpcbind
+systemctl status nfs-utils
+systemctl status rpcbind
+
+hadoop 非常高手  对于这个
+状态：
+inactive(dead)  不活跃的
+active(funning) 活跃的
+
+/root/remote_dir *(insecure,rw,async,no_root_squash)        /etc/exports中添加挂载规则(服务端)
+exportfs -rv    修改的/etc/exports生效        或者systemctl restart nfs-utils
+rpcinfo -p
+
+mount -a -t nfs 47.94.203.224:/root/remote_dir /root/local_dir 挂载
+mount -a -t nfs 47.94.203.224:/dev/vda1 /root/local_dir 挂载
+
+umount  /root/local_dir    客户端操作（取消挂载）
+===========================================
+vim /etc/mail.rc
+发邮件：mailx服务   常用的邮件软件有 mailx和sendmail(更加的推荐mailx,2个一般都直接集成在linux里面了)
+set from=1054294965@qq.com
+set smtp=smtps://smtp.qq.com:465
+set smtp-auth-user=1054294965@qq.com
+set smtp-auth-password=ahnxnhbcvzjibcig   #
+set smtp-auth=login
+#set smtp-use-starttls 这里是不需要配置的，很多地方没说明，配置了反而会验证失败，所以我注释掉；
+set ssl-verify=ignore
+set nss-config-dir=/root/.certs
+
+mkdir -p /root/.certs/
+echo -n | openssl s_client -connect smtp.qq.com:465 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ~/.certs/qq.crt
+certutil -A -n "GeoTrust SSL CA" -t "C,," -d ~/.certs -i ~/.certs/qq.crt
+certutil -A -n "GeoTrust Global CA" -t "C,," -d ~/.certs -i ~/.certs/qq.crt
+certutil -L -d /root/.certs
+
+然后cd 进入 /root/.certs执行:
+certutil -A -n "GeoTrust SSL CA - G3" -t "Pu,Pu,Pu" -d ./ -i qq.crt   返回(**Notice: Trust flag u is set automatically if the private key is present.**)就是对的
+
+mailx -s "邮箱测试" -c 454389344@qq.com chushiyun@ehaier.com < /root/b.txt    #-c 表示抄送列表(跟一个或多个邮箱地址)
+------------------
+echo 'hello world' | mail -s "Subject" -t  chushiyun@ehaier.com   -a From 1054294965@qq.com
+mail报错: No Recipients Specified	(没有指定收信者)
+================================
+配置163邮件发送邮件:
+set from=chushiyun@ehaier.com
+set smtp=smtps://smtp.qiye.163.com:465
+set smtp-auth-user=chushiyun@ehaier.com
+set smtp-auth-password=He134689     # 授权码   KeTJh8QkgERy1zbB
+set smtp-auth=login
+#set smtp-use-starttls 这里是不需要配置的，很多地方没说明，配置了反而会验证失败，所以我注释掉；
+set ssl-verify=ignore
+set nss-config-dir=/root/.certs
+
+mkdir -p /root/.certs/
+echo -n | openssl s_client -connect smtp.qiye.163.com:465 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ~/.certs/qiye.163.crt
+certutil -A -n "GeoTrust SSL CA" -t "C,," -d ~/.certs -i ~/.certs/qiye.163.crt
+certutil -A -n "GeoTrust Global CA" -t "C,," -d ~/.certs -i ~/.certs/qiye.163.crt
+certutil -L -d /root/.certs
+
+然后cd 进入 /root/.certs执行:
+certutil -A -n "GeoTrust SSL CA - G3" -t "Pu,Pu,Pu" -d ./ -i qiye.163.crt   #返回(**Notice: Trust flag u is set automatically if the private key is present.**)就是对的
+
+mailx -s "邮箱测试"  1054294965@qq.com < /root/b.txt    #-c 表示抄送列表(跟一个或多个邮箱地址)
+==================================
+
+yum安装tomcat:（不知道怎么启动多个，因为是通过systemctl启动的）
+yum -y install tomcat
+tomcat目录在  /usr/share/tomcat
+项目放到     /usr/share/tomcat/webapps
+systemctl restart tomcat      重启tomcat
+
+=======================================================
+jenkins：
+jenkins.war 放到tomcat---webapps下面,启动tomcat。
+localhost:8080/jenkins   即可访问
+/var/lib/yum/yumdb/j/ca8d6e137c9b6888f0bf425ffae8e0b8937241da-jenkins-2.121.2-1.1-noarch    jenkins再yum中的地址(yum的安装地址) j是字母开头
+java -jar jenkins.jar --server.port=8090    指定端口号(java方式有个缺点就是窗口关闭就会关闭，还是systemctl好)
+
+/root/.jenkins/secrets/initialAdminPassword     密码在这里   清空后  就没有密码了  这里的密码复制过去仍然不对，那么
+vim  /var/log/jenkins/jenkins.log       搜索password，找到密码即可
+
+systemctl restart jenkins
+http://47.94.203.224:8080/jenkins/           访问地址，不要忘了jenkins
+tail -100f /var/log/jenkins/jenkins.log         jenkins日志位置
+java -jar jenkins.war      java方式启动jenkins    日志会打印到控制台  包括密码
+less /etc/sysconfig/jenkins  查看配置文件
+less /etc/sysconfig/jenkins           搜索修改端口JENKINS_PORT  改为8090即可
+
+---------------------------------
+jenkins稳定版本安装:
+sudo wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
+sudo rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
+sudo yum install jenkins
+
+----------------------------------
+jenkins稳定版本安装:
+sudo wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
+sudo rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
+sudo yum install jenkins
+----------------------------------
+jenkins最新版本安装:
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+sudo yum install jenkins
+----------------------------------
+cd  /etc/yum.repos.d        yum仓库的目录
+
+
+https://github.com/thinkgem/jeesite.git
+git remote add origin https://github.com/thinkgem/jeesite.git
+git remote -v       查看远程仓库
+git clone https://github.com/thinkgem/jeesite.git  下载代码到本地(默认是以项目名来建立)
+git clone https://github.com/thinkgem/jeesite.git  ./jeesite_git      最后一个参数是 指定目录
+=======================================
+gitlab重启:
+# Start all GitLab components
+sudo gitlab-ctl start
+# Stop all GitLab components
+sudo gitlab-ctl stop
+# Restart all GitLab components
+sudo gitlab-ctl restart
+=======================================
+
+find  ./ -maxdepth 1 -name "aaa*.sql"  | xargs -t -i mv {} {}.txt      这种只是后缀名增加了，并没有替换   批量替换
+info coreutils 'echo invocation'       查看echo详细文档     比 man echo更详细
+
+--------------------
+touch "a a.txt";
+find . -name "a a.txt" -print0 | xargs -0 rm -rf           -print0是不换行输出(否则会认为是./a和./a.txt2个文件)     -0是输入项由空字符而不是空格终止(否则也会认为是2个文件)
+
+
+vim /etc/profile
+export HADOOP_HOME=/root/hadoop-3.0.3  或  export HADOOP_HOME=/root/hadoop-2.7.0
+
+export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+
+source /etc/profile
+
+vim hadoop-env.sh       即使有全局变量JAVA_HOME,也还是要写下的  因为etc/profile设置了环境变量,但是不一定有效
+export JAVA_HOME=/bigData/jdk1.8.0_121
+
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.191.b12-1.el7_6.x86_64
+
+vim yarn-env.sh       其实如果设置了全局环境变量就不用这样写了,因为默认是${JAVA_HOME}
+export JAVA_HOME=/bigData/jdk1.8.0_121
+
+vim slaves
+
+-----------------------------------------
+
+服务器1：47.94.203.224    172.17.186.86     iz2ze9a51n762vgibz5idcz
+服务器2: 47.94.99.71      172.17.186.87     iz2ze9a51n762vgibz5idbz
+172.17.186.86 iz2ze9a51n762vgibz5idcz
+172.17.186.87 iz2ze9a51n762vgibz5idbz
+ping iz2ze9a51n762vgibz5idbz         从224 ping 71
+ping iz2ze9a51n762vgibz5idcz         从71 ping224
+/root/hadoop-3.0.3      hadoop目录
+/root/hadoop-3.0.3/sbin        Hadoop  命令目录
+/root/hadoop-3.0.3/etc/hadoop        hadoop配置文件目录
+
+
+/etc/alternatives/java
+ls -l /etc/alternatives/java
+/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.171-8.b10.el7_5.x86_64/jre  被指向
+/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.171-8.b10.el7_5.x86_64    jdk目录
+hadoop-env.sh配置：
+export JAVA_HOME=/usr/lib/jvm/jre-1.8.0-openjdk       导入环境变量
+export PATH="/usr/lib/jvm/jre-1.8.0-openjdk/bin:$PATH"
+
+mkdir -p current/tmp current/data current/dfs/name
+core-site.xml配置:(配置项3分布式文件系统的垃圾箱，值为4320表示3分钟回去清理一次)
+<configuration>
+    <property>
+        <name>hadoop.tmp.dir</name>
+        <value>/root/hadoop-3.0.3/current/tmp</value>
+        <description>A base for other temporary directories.</description>
+    </property>
+    <property>
+        <name>fs.default.name</name>
+        <value>hdfs://iz2ze9a51n762vgibz5idcz:54310</value>
+    </property>
+    <property>
+      <name>fs.trash.interval</name>
+      <value>4320</value>
+   </property>
+</configuration>
+
+hdfs-site.xml配置：<!--  (备注：replication 是数据副本数量，默认为3，salve少于3台就会报错) -->
+dfs.replication  副本的数量，在hdfs中每个块有几个副本
+配置项1，namenode的细节实际上就是一个目录
+配置项2，datanode的细节，真实环境中datanode的内容不需要再namenode的系统下配置，在此配置的原因是我们的系统是伪分布式系统，namenode和datanode在一台机器上
+配置项3，副本的数量，在hdfs中每个块有几个副本
+配置项4，HDFS是否启用web
+配置项5，HDFS的用户组
+配置项6，HDFS的权限，现在配置为不开启权限
+<configuration>
+    <property>
+       <name>dfs.replication</name>
+       <value>1</value>
+    </property>
+    <property>
+      <name>dfs.permissions</name>
+      <value>false</value>
+    </property>
+</configuration>
+
+yarn-site.xml配置：
+配置项1，resourcemanager的hostname，值为你运行的那台机器的主机名或IP地址
+配置项2，nodemanager相关的东西
+配置项3，nodemanager相关的东西
+配置项4，resourcemanager的端口，主机名+端口号（IP+端口）
+配置项5，resourcemanager调度器的端口
+配置项6，resourcemanager.resource-tracker,端口
+配置项7，端口
+配置项8，端口
+配置项9，日志是否启动
+配置项１0，日志保留的时间长短（以秒为单位）
+配置项１1，日志检查的时间
+配置项１2，目录
+配置项１3，目录的前缀
+<configuration>
+    <property>
+     <name>yarn.nodemanager.aux-services</name>
+     <value>mapreduce_shuffle</value>
+     </property>
+     <property>
+     <name>yarn.nodemanager.aux-services.mapreduce_shuffle.class</name>
+     <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+     </property>
+    <property>
+        <name>yarn.resourcemanager.resource-tracker.address</name>
+        <value>172.17.186.86:8031</value>本机IP:8031
+      </property>
+      <property>
+        <name>yarn.resourcemanager.scheduler.address</name>
+        <value>172.17.186.86:8030</value>本机IP:8030
+      </property>
+    <property>
+        <name>yarn.resourcemanager.address</name>
+        <value>172.17.186.86:8032</value>本机IP:8032
+      </property>
+</configuration>
+
+mapred-site.xml配置:
+<configuration>
+     <property>
+     <name>mapreduce.framework.name</name>
+     <value>yarn</value>
+     </property>
+    <property>
+        <name>mapreduce.cluster.temp.dir</name>
+        <value>/root/hadoop-3.0.3/current/data</value>
+      </property>
+      <property>
+        <name>mapreduce.cluster.local.dir</name>
+        <value>/root/hadoop-3.0.3/current/data</value>
+      </property>
+</configuration>
+
+workers中 删除localhost 添加 iz2ze9a51n762vgibz5idbz
+scp  core-site.xml hdfs-site.xml mapred-site.xml workers hadoop-env.sh 47.94.99.71:/root/hadoop-3.0.3/etc/hadoop      修改的配置文件拷贝到其他机器
+scp   hadoop-env.sh 47.94.99.71:/root/hadoop-3.0.3/etc/hadoop
+
+hdfs namenode -format    格式化(若没有设置路径$HADOOP_HOME/bin为环境变量，则需在$HADOOP_HOME路径下执行,bin/hdfs namenode -format)
+
+
+报错： ERROR: but there is no HDFS_NAMENODE_USER defined. Aborting operation.(类似的还有no HDFS_DATANODE_USER等)
+sbin/start-dfs.sh 和  sbin/stop-dfs.sh  文件中顶部都添加：
+vim /root/hadoop-3.0.3/sbin/start-dfs.sh;
+vim /root/hadoop-3.0.3/sbin/stop-dfs.sh;
+HDFS_DATANODE_USER=root
+HADOOP_SECURE_DN_USER=hdfs
+HDFS_NAMENODE_USER=root
+HDFS_SECONDARYNAMENODE_USER=root
+
+
+
+
+start-dfs.sh
+
+报错：ERROR: but there is no YARN_RESOURCEMANAGER_USER defined. Aborting launch.
+start-yarn.sh 和 stop-yarn.sh 文件顶部添加
+vim /root/hadoop-3.0.3/sbin/start-yarn.sh;
+vim /root/hadoop-3.0.3/sbin/stop-yarn.sh;
+YARN_RESOURCEMANAGER_USER=root
+HADOOP_SECURE_DN_USER=yarn
+YARN_NODEMANAGER_USER=root
+
+start-yarn.sh
+
+/root/hadoop-3.0.3/sbin/start-dfs.sh; /root/hadoop-3.0.3/sbin/start-yarn.sh;      启动
+都启动后输入  http://47.94.203.224:8088    即可出现hadoop界面
+/root/hadoop-3.0.3/sbin/stop-dfs.sh; /root/hadoop-3.0.3/sbin/stop-yarn.sh;   停止
+
+--------------------------
+jps查看：
+报错： -bash： jps： command not found  (需要安装jdk)
+
+jps没有任何输出：
+我的原因是，打开tmp找到文件，发现hsperfdata文件权限全部是777，使用命令
+chmod 755 hsperfdata_*
+-------------------------------------
+
+ll -rt `which java`       查看java的位置
+ll /etc/alternatives/java  java位置
+/usr/lib/jvm/jre-1.8.0-openjdk/bin/java
+ls -l /usr/lib/jvm/jre-1.8.0-openjdk/bin/java  不是lnk，所以这就是java目录
+
+export JAVA_HOME=/usr/lib/jvm/jre-1.8.0-openjdk
+export PATH=$PATH:$JAVA_HOME/bin
+export CLASSPATH=.:$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib/dt.jar
+
+export JAVA_HOME=/usr/lib/jvm/java
+export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JAVA_HOME/jre/lib/rt.jar
+export PATH=$PATH:$JAVA_HOME/bin
+------------------------------
+报错： -- process information unavailable
+cd /tmp;  ls grep hsper | xargs rm -rf     删除hsper*文件即可
+
+
+/etc/alternatives/java
+etc/alternatives/java
+/etc/alternatives/java
+===========================================
+报错： bash: rsync: command not found
+1、yum -y install rsync
+2、远程服务器也需要安装
+rsync -P --rsh=ssh hadoop-3.0.3.tar.gz 47.94.99.71:/root      断点续传
+------------------------------
+报错:Error: rpmdb open failed,这是因为rpn库损坏了
+cd /var/lib/rpm
+ls
+rm __db.* -rf
+rpm --rebuilddb
+yum clean all
+yum update
+然后用yum list "*java*" 验证是否可以用了
+============================================
+ps -ef | grep java | grep -v grep |awk '{print $2}' | xargs kill -9        杀掉所有java进程
+========================================================
+重装jdk：    java 命令可以，javac 不可以
+yum list installed |grep java
+列表如下：
+java-1.8.0-openjdk.x86_64               1:1.8.0.181-3.b13.el7_5        @updates
+java-1.8.0-openjdk-headless.x86_64      1:1.8.0.181-3.b13.el7_5        @updates
+javapackages-tools.noarch               3.4.1-11.el7                   @base
+python-javapackages.noarch              3.4.1-11.el7                   @base
+tzdata-java.noarch                      2018e-3.el7                    @updates
+
+yum list installed |grep java-1.8.0-openjdk*
+列表:
+yum list installed |grep java-1.8.0-openjdk*
+java-1.8.0-openjdk.x86_64               1:1.8.0.181-3.b13.el7_5        @updates
+java-1.8.0-openjdk-headless.x86_64      1:1.8.0.181-3.b13.el7_5        @updates
+
+yum -y remove java-1.8.0-openjdk*
+yum -y remove tzdata-java.noarch
+
+yum -y install  java-1.8.0-openjdk   java-1.8.0-openjdk-devel     没有devel版本就没有javac(jps: command not found也可能是这个原因)
+java,javac,jps都可用了
+==========================================================
+yum -y install lynx  perl-CGI              cgi必须大写        浏览网页
+cd /etc/yum.repos.d ;   #yum仓库地址的目录
+手动修改yum库:
+mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup  #备份库
+wget http://mirrors.163.com/.help/CentOS6-Base-163.repo   #下载最新库
+mv CentOS6-Base-163.repo CentOS-Base.repo    #重命名库
+=======================
+脚本参数：
+
+$# 是传给脚本的参数个数
+
+$0 是脚本本身的名字
+$1 是传递给该shell脚本的第一个参数
+$2 是传递给该shell脚本的第二个参数
+$@ 是传给脚本的所有参数的列表
+echo $* 是以一个单字符串显示所有向脚本传递的参数，与位置变量不同，参数可超过9个
+echo $$ 是脚本运行的当前进程ID号
+$? 是显示最后命令的退出状态，0表示没有错误，其他表示有错误
+
+----------------
+vim test.sh;
+输入：
+#!/bin/bash
+echo "$0(脚本文件名称): "$0;
+echo "$#(参数个数): "$#;
+echo "$1(参数1): "$1;
+echo "$2(参数2): "$2;
+echo "$@(脚本参数列表): "$@;
+echo "$$(脚本本身的进程号) :"$$;
+echo "$?(退出状态): "$?;
+执行：
+./test.sh aaa bbb;
+-------------------------------------
+外部传参：
+#!/bin/bash
+for i in $@
+do echo $i;
+done;
+执行：
+./test.sh aaa bbb ccc ddd eee fff ggg hhh iii jjj kkk lll mmm; #超过9个也没事
+----------------------------
+编参：
+#!/bin/bash
+list="aaa bbb ccc"; #以空格分割
+for i in $list
+do echo $i;
+done;
+执行：
+./test.sh
+---------------------------
+命令参:(如ls)
+#!/bin/bash
+for i in `ls`;
+do echo $i;
+done;
+执行：
+./test.sh
+----------------------------
+
+dig vap.haier.net; #从answer section： 看ip地址
+-------------------------------
+tcpdump抓包工具：
+yum -y install tcpdump; #不是服务，不用启动
+tcpdump host 47.94.203.224;
+tcpdump -i eth0; #
+tcpdump src host 47.94.203.224; # 从224发出的包    实测无效
+tcpdump dst host 47.94.203.224; # 目的是224的包    实测无效
+tcpdump tcp port 22 and host 47.94.203.224;  #指定主机和端口
+tcpdump -c 10 -nn -i eth0 tcp dst port 22 ; #到本机22端口的包
+---------------------------------------------
+批量修改 tomcat配置文件：(8081)
+cp -rp  /root/apache-tomcat-7.0.64  /root/apache-tomcat-7.0.64-test;
+sed -i 's/8080/8081/g' /root/apache-tomcat-7.0.64-test/conf/server.xml;  #替换8080 -i是直接在原文件上修改
+sed -i  's/8005/8105/g' /root/apache-tomcat-7.0.64-test/conf/server.xml;  #替换8005
+sed -i 's/8009/8109/g' /root/apache-tomcat-7.0.64-test/conf/server.xml;  #替换8009
+vim /root/apache-tomcat-7.0.64-test/conf/server.xml; #查看是否替换
+/root/apache-tomcat-7.0.64-test/bin/startup.sh;  #启动
+
+----------------------------------------------------
+cp -rfp /root/apache-tomcat-7.0.64 /root/apache-tomcat-7.0.64.bak; #备份
+vim /root/apache-tomcat-7.0.64/conf/server.xml;
+找到8080位置，插入内容：
+maxThreads="2"
+minSpareThreads="2"
+maxSpareThreads="2"
+acceptCount="2"
+cd /root/apache-tomcat-7.0.64/webapps;
+rz 上传项目
+/root/apache-tomcat-7.0.64/bin/shutdown.sh;
+/root/apache-tomcat-7.0.64/bin/startup.sh;
+地址输入 http://47.94.203.224:8080/timeout-0.0.1-SNAPSHOT/delay/delay60
+tail -200f /root/apache-tomcat-7.0.64/logs/catalina.out;
+ls /root/apache-tomcat-7.0.64/webapps |grep timeout |xargs rm -rf; #并不能删除，因为传递的是文件名，不是绝对路径
+cp -rfp /root/timeout/target/timeout-0.0.1-SNAPSHOT.war /root/apache-tomcat-7.0.64/webapps;
+cp -rfp /root/timeout/target/timeout-0.0.1-SNAPSHOT /root/apache-tomcat-7.0.64/webapps;
+
+
+-------------------------------------------------
+tomcat端口修改规范：
+8080 8005 8009
+8081 8105 8109
+8082 8205 8209
+8083 8305 8309
+8084 8405 8409
+--------------------------------------------
+^H和^M:  ^H是backspace,^M是enter。
+--------------------------------------------
+secureCRT 设置编码： 选项---会话选项---外观---字符编码---utf8.
+secureCRT hive不能退格： 会话选项---终端，仿真---仿真，终端---linux
+
+--------------------------------------------
+linux安装谷歌浏览器：
+cd /etc/yum.repos.d;
+vim google-chrome.repo;
+输入内容:
+[google-chrome]
+name=google-chrome
+baseurl=http://dl.google.com/linux/chrome/rpm/stable/$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub
+
+执行：
+yum -y install google-chrome-stable --nogpgcheck; #安装   不加--nogpgcheck会失败
+-------------------------------------------------------------
+搭建hadoop单机环境：(单机不用修改core-site.xml等文件)
+tar -zxvf hadoop-3.0.3.tar.gz;
+=====================================
+
+卸载和安装jdk:
+yum -y remove java;
+yum list "*jdk*"
+yum -y install java-1.8.0-openjdk.x86_64;
+
+ll -rt -xargs `ll -rt -xargs "`which java`"`
+
+找到java路径:
+which java;      #返回/usr/bin/java
+ll -rt /usr/bin/java;  #返回 /etc/alternatives/java
+ll -rt /etc/alternatives/java #返回 /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.191.b12-1.el7_6.x86_64/jre/bin/java ,注意带jre的路径,需要到jre这一层,否则会在java_home下直接找bin/java,这样是找不到的
+echo $JAVA_HOME; #查看jdk路径   例如：/usr/lib/jvm/jre-1.8.0-openjdk;
+=====================================
+----------------------
+vim /root/hadoop-3.0.3/etc/hadoop/hadoop-env.sh;
+修改：
+export JAVA_HOME=/usr/lib/jvm/jre-1.8.0-openjdk        #不要带冒号
+export HADOOP_CLIENT_OPTS="-Xmx512m $HADOOP_CLIENT_OPTS"  #修改内存大小(可选)
+
+-----------------------------------------------------
+配置hadoop：(hadoop.tmp.dir改一下比较好，否则容易没有节点)
+vim /root/hadoop-3.0.3/etc/hadoop/core-site.xml;
+<property>
+  <name>hadoop.tmp.dir</name>
+  <value>/root/hadoop-3.0.3/hadoop-${user.name}</value>
+</property>
+<property>
+    <name>fs.defaultFS</name>
+    <value>hdfs://localhost:9000</value>
+</property>
+
+vim /root/hadoop-3.0.3/etc/hadoop/hdfs-site.xml;
+<property>
+    <name>dfs.replication</name>
+    <value>1</value>
+</property>
+
+/root/hadoop-3.0.3/bin/hdfs namenode -format;
+/root/hadoop-3.0.3/sbin/start-dfs.sh; #启动hadoop
+/root/hadoop-3.0.3/sbin/stop-dfs.sh; #停止hadoop
+telnet localhost 9870;
+curl http://localhost:9870; # 或者浏览器浏览
+
+/root/hadoop-3.0.3/bin/hdfs dfs -mkdir /user;
+/root/hadoop-3.0.3/bin/hdfs dfs -mkdir /user/root;
+
+/root/hadoop-3.0.3/bin/hdfs dfs -mkdir input;
+/root/hadoop-3.0.3/bin/hdfs dfs -put /root/hadoop-3.0.3/etc/hadoop/*.xml   input;
+-------------------------------------------
+使用hadoop测试类：
+cd /root/hadoop-3.0.3;
+mkdir input; cd input;
+echo "hello world" > test1.txt; #数据1
+echo "hello hadoop" > test2.txt; #数据2
+hadoop  jar /root/hadoop-3.0.3/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.0.3.jar wordcount input output; #output是默认的输出目录
+cat output/*;
+--------------------------------------
+配置yarn：
+vim /root/hadoop-3.0.3/etc/hadoop/mapred-site.xml;
+<property>
+    <name>mapreduce.framework.name</name>
+    <value>yarn</value>
+</property>
+<property>
+    <name>mapreduce.application.classpath</name>
+    <value>$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/*:$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/lib/*</value>
+</property>
+
+vim /root/hadoop-3.0.3/etc/hadoop/yarn-site.xml;
+<property>
+    <name>yarn.nodemanager.aux-services</name>
+    <value>mapreduce_shuffle</value>
+</property>
+<property>
+    <name>yarn.nodemanager.env-whitelist</name>
+    <value>JAVA_HOME,HADOOP_COMMON_HOME,HADOOP_HDFS_HOME,HADOOP_CONF_DIR,CLASSPATH_PREPEND_DISTCACHE,HADOOP_YARN_HOME,HADOOP_MAPRED_HOME</value>
+</property>
+
+/root/hadoop-3.0.3/sbin/start-yarn.sh;
+telnet localhost 8088;
+curl http://localhost:8088/;
+
+---------------------------------------------------------------------------
+hue复制内容进文件：
+view more---location---new---file，名字随意---点击这个文件---edit file，粘贴进去即可。
+view more---location---upload---files---选择文件即可。
+----------------------------------
+安装hive：
+wget https://mirrors.tuna.tsinghua.edu.cn/apache/hive/hive-3.0.0/apache-hive-3.0.0-bin.tar.gz; #这个地址浏览器下载也很快
+tar -zxvf apache-hive-3.0.0-bin.tar.gz;
+vim /etc/profile;
+输入:
+export HIVE_HOME=/root/apache-hive-3.0.0-bin   #hive环境变量
+export PATH=$PATH:$HIVE_HOME/bin       #hive添加到path
+source /etc/profile;
+
+export HADOOP_CLASSPATH=$HADOOP_CLASSPATH:$HIVE_HOME/lib/*     #需要先配置HIVE_HOME
+source /etc/profile;
+
+$HADOOP_HOME/bin/hadoop fs -mkdir       /tmp;  #hdfs 创建的文件是不能用ls看的??
+$HADOOP_HOME/bin/hadoop fs -mkdir  -p   /user/hive/warehouse; # -p不要忘掉
+$HADOOP_HOME/bin/hadoop fs -chmod g+w   /tmp;
+$HADOOP_HOME/bin/hadoop fs -chmod g+w   /user/hive/warehouse;
+$HIVE_HOME/bin/hive; #运行hive
+schematool -initSchema -dbType derby
+$HIVE_HOME/bin/schematool -dbType derby -initSchema; #初始化derby
+$HIVE_HOME/bin/schematool -dbType mysql -initSchema; #初始化mysql
+$HIVE_HOME/bin/schematool -dbType mysql -info; #查看初始化的信息
+$HIVE_HOME/bin/hiveserver2;
+$HIVE_HOME/bin/beeline -u jdbc:hive2://localhost:10000;
+$HIVE_HOME/hcatalog/sbin/hcat_server.sh;
+$HIVE_HOME/hcatalog/bin/hcat;
+
+$HIVE_HOME/hcatalog/sbin/webhcat_server.sh;
+
+修改配置文件
+vim $HIVE_HOME/conf/hive-default.xml; #不存在就复制cp hive-default.xml.template hive-default.xml;
+
+export HADOOP_CLASSPATH=$HADOOP_CLASSPATH:$HIVE_HOME/lib/*
+------------------------------------------------
+vim /root/apache-hive-3.0.0-bin/conf/hive-site.xml;
+输入：
+<SPAN style="FONT-SIZE: small"><?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+ <property>
+   <name>hive.metastore.local</name>
+   <value>true</value>
+ </property>
+ <property>
+ <name>javax.jdo.option.ConnectionURL</name>
+   <value>jdbc:mysql://localhost:3306/metastore_db?createDatabaseIfNotExist=true</value>
+ </property>
+ <property>
+ <name>javax.jdo.option.ConnectionDriverName</name>
+   <value>com.mysql.jdbc.Driver</value>
+ </property>
+ <property>
+   <name>javax.jdo.option.ConnectionUserName</name>
+   <value>root</value>
+ </property>
+ <property>
+   <name>javax.jdo.option.ConnectionPassword</name>
+   <value>1234</value>
+ </property>
+ <property>
+   <name>datanucleus.fixedDatastore</name>
+   <value>false</value>
+ </property>
+</configuration></SPAN>
+
+执行：
+hive   # 进入hive>  命令行     ,也是hive客户端
+LOAD DATA LOCAL inpath "/root/hive.txt"  into table ttt;  #hive导入数据
+set hive.exec.dynamic.partition; # 查看是否分区    true是分区
+set hive.exec.dynamic.partition.mode=nonstrict;
+SET hive.exec.max.dynamic.partitions=100000;(如果自动分区数大于这个参数，将会报错)
+SET hive.exec.max.dynamic.partitions.pernode=100000;
+
+
+-------------------------------------------------------
+hive配置mysql：
+cp hive-default.xml.template hive-site.xml;
+vim hive-site.xml;
+ConnectionURL  设为   jdbc:mysql://localhost/hive?createDatabaseIfNotExist=true
+ConnectionDriverName  设为 com.mysql.jdbc.Driver  高级版本设置为com.mysql.cj.jdbc.Driver
+ConnectionUserName  设为  root
+ConnectionPassword  设为  1234
+
+CREATE TABLE `mobile7` (
+  `id` varchar(64) NOT NULL DEFAULT '',
+  `type` varchar(255) DEFAULT NULL,
+  `area` varchar(255) DEFAULT NULL,
+  `volte` varchar(255) DEFAULT NULL,
+  `apru` varchar(255) DEFAULT NULL,
+  `mou` varchar(255) DEFAULT NULL,
+  `dou` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+报错： at [row,col,system-id]: [3213,96,"file:/           3213行第96个字符是错误字符
+报错：org.apache.hadoop.hive.metastore.HiveMetaException: Failed to load driver         mysql-connector-java包放到/root/apache-hive-3.0.0-bin/lib下
+报错： Schema initialization FAILED! Metastore state would be inconsistent !!      删掉hive下的metastore_db,删掉mysql的hive数据库，重新执行schematool -dbType mysql -initSchema;
+schematool -dbType mysql -initSchema;
+
+insert into mobile values(1,"aaa","aaa","aaa","aaa","aaa","aaa");
+--------------------------------------------------------
+替换hive的地址：
+报错：java.net.URISyntaxException: Relative path in absolute URI: ${system:java.io.tmpdir%7D/$%7Bsystem:user.name%
+在hive下新建一个tmpdir目录，如  mkdir -p /root/apache-hive-3.0.0-bin/tmpdir;
+vim hive-site.xml;   ${system:java.io.tmpdir}/${system:user.name}
+
+1,$s/${system:java.io.tmpdir}/\/root\/apache-hive-3.0.0-bin\/tmpdir/g    全局替换${system:java.io.tmpdir}  为/root/apache-hive-3.0.0-bin/tmpdir
+1,$s/\/root\/apache-hive-3.0.0-bin\/tmpdir/${system:java.io.tmpdir}/   还原回来 /root/apache-hive-3.0.0-bin/tmpdir 为${system:java.io.tmpdir}
+1,$s/${system:java.io.tmpdir}\/${system:user.name}/\/root\/apache-hive-3.0.0-bin\/tmpdir/g      所有的都替换
+
+1,$s/${system:java.io.tmpdir}/\/root\/apache-hive-3.0.0-bin\/tmpdir/g      只替换${system:java.io.tmpdir}
+----------------------------------------------
+报错：llegal character entity: expansion character (code 0x8
+ at [row,col,system-id]: [3213,96,"file:/root/apache-hive-3.0.0-bin/conf/hive-site.xml"]
+3213gg找到行，去掉&#8;
+----------------------------------------------------------
+报错：Relative path in absolute URI: ${system:java.io.tmpdir%7D/$%7Bsystem:user.name%7D
+
+--------------------------------------------------------
+hive 建表语句：  例子：
+create table t_user(
+id int,
+username string,
+password string
+)row format delimited fields terminated by ',';   #这句和上面是一起的，不要漏掉
+
+ -- 创建mobile表
+CREATE TABLE mobile(
+  id int,
+  type string,
+  area string,
+  volte string,
+  apru string,
+  mou string,
+  dou string
+)row format delimited fields terminated by ',';
+
+create table ttt2(
+id int,username string,password string
+)row format delimited fields terminated by ',';
+报错： Table insclause-0 has 7 columns, but query has 8 columns.      插入的数据列数多于表列数
+
+
+CREATE TABLE mobile(
+  id int,
+  type string,
+  area string,
+  volte string,
+  apru string,
+  mou string,
+  dou string
+)row format delimited fields terminated by ',';
+
+
+CREATE TABLE mobile(
+  type string,
+  area string,
+  volte string,
+  apru string,
+  mou string,
+  dou string
+)partitioned by (id int)  -- 可以多个字段的组合分区
+row format delimited fields terminated by ',' Stored AS TEXTFILE;
+
+load data local inpath "/root/h5/h5-4500.csv" into table default.mobile ;  -- hive导入数据
+
+  set hive.exec.reducers.bytes.per.reducer=5; -- 多少个reducers来处理
+  set hive.exec.reducers.max=5; -- 每个任务最大的reducers
+  set mapreduce.job.reduces=1; --
+
+  set hive.exec.reducers.bytes.per.reducer=5;
+  set hive.exec.reducers.max=5;
+  set mapreduce.job.reduces=1;
+
+ mysql --password=1234 test "show variables";
+
+
+报错：FAILED: SemanticException [Error 10035]: Column repeated in partitioning columns    分区字段不能和表中其他字段重复，以id分区，那么create的列中不要写id
+
+-----------------------------------------------------------
+
+hdfs version ; #查看hadoop版本      和 hadoop version;一样
+----------------------------------------------
+vim /root/hadoop-3.0.3/sbin/start-dfs.sh; #stop也是需要添加的
+vim /root/hadoop-3.0.3/sbin/stop-dfs.sh;
+
+HDFS_DATANODE_USER=root
+HADOOP_SECURE_DN_USER=hdfs
+HDFS_NAMENODE_USER=root
+HDFS_SECONDARYNAMENODE_USER=root
+
+
+vim /root/hadoop-3.0.3/sbin/start-yarn.sh;    #stop也是需要添加的
+vim /root/hadoop-3.0.3/sbin/stop-yarn.sh;
+
+YARN_RESOURCEMANAGER_USER=root
+HADOOP_SECURE_DN_USER=yarn
+YARN_NODEMANAGER_USER=root
+然后启动：(停止)
+/root/hadoop-3.0.3/sbin/start-dfs.sh;
+/root/hadoop-3.0.3/sbin/start-yarn.sh;
+/root/hadoop-3.0.3/sbin/stop-dfs.sh;
+/root/hadoop-3.0.3/sbin/stop-yarn.sh;
+
+/root/hadoop-3.0.3/sbin/start-all.sh;
+/root/hadoop-3.0.3/sbin/stop-all.sh;
+---------------------------------------
+hadoop fs -help; #hadoop 手册
+vim /root/hadoop-3.0.3/share/doc/hadoop/hadoop-project-dist/hadoop-common/core-default.xml;  #hadoop默认文件存储路径,hadoop.tmp.dir,默认是/tmp/hadoop-root
+--------------------------------------------------
+安装hbase：
+wget https://mirrors.tuna.tsinghua.edu.cn/apache/hbase/2.0.1/hbase-2.0.1-bin.tar.gz  #下载hive，浏览器也很快
+tar -zxvf hbase-2.0.1-bin.tar.gz;
+
+/root/hbase-2.0.1/bin/start-hbase.sh; #启动
+
+/root/hbase-2.0.1/bin/hbase; #调用hbase命令
+/root/hbase-2.0.1/bin/hbase shell; # base shell命令
+
+hbase配置环境变量：
+vim /etc/profile;
+export HBASE_HOME=/root/hbase-2.0.1
+export PATH=$HBASE_HOME/bin:$PATH
+source /etc/profile;
+
+----------------------------------------------------
+安装derby:
+tar -zxvf db-derby-10.14.2.0-bin.tar.gz;
+vim /etc/profile;
+export DERBY_HOME=/root/db-derby-10.14.2.0-bin
+export PATH=$DERBY_HOME/bin:$PATH
+source /etc/profile;
+
+derby的使用：
+输入ij      #这种是窗口的模式
+connect 'jdbc:derby:mydb;create=true'; #创建数据库
+create table mytable(number varchar(4), name varchar(10), age int, address varchar(40));  #创建表
+show tables;
+drop table mytable;
+
+$DERBY_HOME/db-derby-10.14.2.0-bin/bin/startNetworkServer; #启动derby服务
+telnet localhost ;
+------------------------------------------------
+export HIVE_CONF_DIR=$HIVE_HOME/conf  #hive配置文件地址
+hive语句中不能有分号，否则报错，如果有，需要转义。
+---------------------------------------------
+
+报错： error: command 'gcc' failed with exit status 1
+sudo yum -y  install python-devel;
+sudo yum -y install libevent-devel; #这个也是很必要的
+easy_install gevent;
+----------------------------------------
+安装setuptools工具：
+sudo wget  https://pypi.python.org/packages/source/s/setuptools/setuptools-0.6c11.tar.gz
+tar -xvf setuptools-0.6c11.tar.gz
+cd setuptools-0.6c11
+sudo python setup.py build
+sudo python setup.py install
+.....
+#如下标志安装成功
+Installed /usr/lib/python2.6/site-packages/setuptools-0.6c11-py2.6.egg
+Processing dependencies for setuptools==0.6c11
+Finished processing dependencies for setuptools==0.6c11
+查看: ll /usr/lib/python2.6/site-packages/setuptools-0.6c11-py2.6.egg      #后面的路径和前面installed的路径一样
+
+------------------------------------------------
+mysql主从同步：
+vim /etc/my.cnf.d/server.cnf;#进入主机配置文件           vim /etc/my.cnf;
+server-id = 1  # 1为master，2为salve
+log-bin = mysql-bin  #同步形式       也可以是sql-bin-update-same
+#binlog-do-db = db_backup #要同步的数据库
+#binlog-ignore-db = mysql #不需要同步的数据库
+
+vim /etc/my.cnf; #进入slave 配置文件
+server-id = 2  # 1为master，2为salve
+slave-skip-errors=all
+#binlog-do-db = db_backup #要同步的数据库
+#binlog-ignore-db = mysql #不需要同步的数据库
+
+systemctl restart mariadb; #分别重启
+
+show variables like '%log_bin%'; #查看状态  这个是通过设置log-bin = mysql-bin 来实现的
+show master logs;  # 或者show master status; (status只会显示一个) 这个需要开启log_bin
+reset master; # 清空所有的binlog日志
+
+在224上给71授权
+grant replication slave on *.* to 'root'@'47.94.99.71' identified by '1234';
+flush privileges; # 刷新权限
+在71上给224授权
+grant replication slave on *.* to 'root'@'47.94.203.224' identified by '1234';
+flush privileges;
+
+主节点：
+stop slave;start slave;
+show master status\G; #记住  File是mysql-bin.000002，Position是245(这2个参数change master语句要用到) \G换行查看
+在从节点上执行命令：
+stop slave;
+CHANGE MASTER TO MASTER_HOST='47.94.203.224',MASTER_USER='root',MASTER_PASSWORD='1234',MASTER_LOG_FILE='mysql-bin.000002',MASTER_LOG_POS=245;
+
+start slave;
+show slave status\G;  # 看 Slave_IO_Running: Yes 和 Slave_SQL_Running: Yes
+如果是No的话，到master数据库：
+stop slave;start slave; reset slave; show slave logs;  #logs比较好，可以看出是否只有一个，status无论如何都只有一个
+
+手动主从同步：
+change master to MASTER_HOST='47.94.203.224',MASTER_USER='root', MASTER_PASSWORD='1234', MASTER_PORT=3306, MASTER_LOG_FILE='mysql-bin.000001',MASTER_LOG_POS=245 ;
+
+取消主从：
+stop slave; change master to master_host='1';      # 或 change master to master_host='47.94.203.224';
+show slave status\G;  #Slave_IO_Running:No  Slave_SQL_Running:No  表示关闭了
+----------------------------------------------------------
+linux连接vpn: 不成功
+!connect jdbc:hive2://10.138.87.68:10001/crm bigdata bigdata ;   #远程连接hive
+
+vpn地址：cu.vpn.haier.net:10445
+vpn账号：A0018325
+vpn密码：313610
+
+yum -y install vpnc;
+vim /etc/vpnc/default.conf;
+编辑：
+IPSec gateway 27.223.70.57     #[hostname or ip address of vpn concentractor]
+IPSec ID  cu.vpn.haier.net:10445#[group name]
+IPSec secret 313610    #[group password]
+Xauth username A0018325   #[username]
+Domain #[domain name]
+输入：vpnc   提示输入密码：输入看是否成功
+---------------------------------------
+
+cpu占用率过高：
+top;  #找到cpu超载的pid
+top -H -p 82512; #查看超载pid下的异常线程
+printf "%x\n" 82514;  #查看16进制异常线程号
+jstack 82512|grep 14252 -A90
+-------------------------
+printf语法:
+printf浮点数用法:(%5表示最长几位,包括小数点在内)
+printf "%5.2f" 1.5;    # 1.50前面有个空(因为要保持5位的总长度)
+printf "%4.2f" 1.5;    # 1.50 补足为2位小数
+printf %g 12341234  #科学计数法
+prinf "%05d" 1234
+
+报错：正在连接127.0.0.1:2181...无法打开到主机的连接。 在端口 23: 连接失败 (127.0.0.1 和2181中间应该用空格不是：)
+=======================================================
+git安装高版本
+wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.9.2.tar.gz
+tar -zxvf git-2.9.2.tar
+cd git-2.9.2
+然后执行以下命令：
+make configure
+./configure --prefix=/usr/local/git --with-iconv=/usr/local/libiconv
+make all doc
+sudo make install install-doc install-html
+配置环境变量:
+sudo vim /etc/profile
+export PATH=/usr/local/git/bin:$PATH  尾行添加一行并保存
+source /etc/profile  配置生效
+#git --version
+======================================================
+linux 定时任务,没分钟给add.txt添加一行 现在的时间:
+crontab -e;  #进入定时任务列表文本
+输入：
+*/1 * * * * /root/add.sh     #每分钟执行一次   然后保存退出
+vim /root/add.sh;
+chmod -R 777 /root/add.sh; # 授权  否则不能执行（新建的文件权限都是rw-r--r--,都是没有执行的权限的）
+输入 echo `date` >> add.txt;
+crontab -l; 查看定时任务
+cat /root/add.txt;   #过一段时间查看add.txt中是否有每分钟的时间记录
+service crond status;
+========================================================
+在linux环境下,使用svn co (即svn checkout) 报svn: Authorization failed错误,
+查看是否安装了gcc, gcc -v.
+=========================================
+脚本传参:   $n表示第n个参数
+#!/bin/bash
+echo $1 $2;  #  $1 参数1,$2 参数2
+echo $#;  #   $# 参数个数
+echo $0;  #  $0 脚本文件名
+----------------------------
+自定义函数:
+function f1(){
+echo "f1";
+}
+f1;
+--------------------------
+./test1.sh   #引入其他脚本
+. ./test.sh; 或者source ./test.sh;   #如果不在同一目录,最好使用绝对路径
+--------------------------
+文件是否存在:
+if [ -f /root/a.txt ]
+then
+echo "File exists"
+fi
+-----------------
+文件是否为空:       条件后要加分号";"
+if [[ -s 'a.txt' ]]; then
+    echo "not empty"
+else echo "is empty"
+fi
+------------------------
+dirname "/root/a.txt"        #根据路径获取 目录
+basename "/root/a.txt"       #根据路径获取 文件名
+------------------------
+for循环: in后面可以是个数组,也可以是命令
+for i in $(ls);do
+echo item:$i       #这个item:  相当于字符串"item:"
+done
+------------------------
+获取文件的第5行:
+head -n 5 a.txt | tail -1    #先取前5行,再在其中取最后一行
+------------------------
+if语句:   条件是[]  左右都要有空格  不能使用==等符号  要用运算符,而且不要忘了'-'
+if  [ 1 -eq 0 ]
+then
+    echo "1 eq 0"
+else
+  echo "1 eq 1"
+fi
+------------------------
+替换上一条命令:
+^ls^ll    #把上一条命令中的ls替换为ll
+
+服务器1：47.94.203.224    172.17.186.86     iz2ze9a51n762vgibz5idcz
+服务器2: 47.94.99.71      172.17.186.87     iz2ze9a51n762vgibz5idbz
+---------------------------------------
+命令行多行输入：
+cat << EOF;  #这样enter就只换行,但是不执行了   如果要终止命令,输入EOF即可
+----------------------------
+lsof -i :3306       #查看哪个端口正在被谁使用
+--------------------------
+局部变量:   任何位置定义的都是全局变量,如果要局部变量,前面加local     调用函数的时候不用加()  只打印aaa,不打印bbb,因为bbb是local变量
+function f1(){
+    innerName="aaa";
+    local innerName2="bbb";
+}
+f1  # 如果不执行 那么变量其实没有初始化
+echo $innerName;
+echo $innerName2;
+-----------------------------------
+脚本调试:  -x
+-n:不会执行该脚本，仅查询脚本语法是否有问题，并给出错误提示
+-v:在执行脚本时，先将脚本的内容输出到屏幕上，然后执行脚本。如果有错误，也会给出错误提示。
+-x:将执行的脚本内容及输出显示到屏幕上，这是对调试很有用的参数。
+sh -n test.sh
+sh -x test.sh
+sh v
+------------------------------------
+-print0和-0的区别:
+touch "chu shiyun.log";   #创建一个文件名带空格的文件
+find -name '*shiyun.log';  #结果是./chu shiyun.log
+find -name '*shiyun.log' |xargs rm;  #报错(xargs会以空格作为分隔符,-0是表示用 NULL 字符 ('\0')来作为分隔符)  会当作./chu 和shiyun.log2个文件 所以找不到
+find -name '*shiyun.log' -print0|xargs -0 rm;  #前面用-print0 后面用xargs -0 ,都使用 NULL 字符 ('\0')l作为分隔符
+-------------------------------------
+ls a.txt b.txt | xargs -n 2 -p     # xargs 调试模式 -p是interactive(交互模式)  可以查看运行的过程
+---------------------------
+批量创建文件:
+touch {1..100}  #创建1-100  100个文件
+touch {a..z}  #创建a-z   26个文件
+----------------------------
+删除变量：
+aaa=111;
+echo $aaa;
+unset aaa;
+echo $aaa;
+-----------------------
+只读变量删除不掉:
+readonly aaa=111;
+unset aaa;  #执行命令的时候  会提示unset: aaa: cannot unset: readonly variable(无法删掉只读变量)
+echo $aaa;
+-----------------------------
+aaa=chushiyun;
+echo ${#aaa}; # 获取变量长度
+echo  ${aaa:2:4}  #截取变量字符串(区间)
+echo  ${aaa:2}  #截取变量字符串(到末尾)
+echo `expr index "chushiyun"  "su"`     #expr index  求下标,s或者u哪个先出现用哪个
+-----------------------------
+arr=(chushiyun,naikaka);
+echo ${arr}  # 不会输出整个数组,只会输出第一个元素
+echo ${arr[2]}   #数组单个元素
+echo ${arr[@]}  或者 echo ${arr[*]}  #数组所有元素
+echo ${#arr[@]} 或者 echo ${arr[*]}　#数组长度
+
+------------------------
+多行注释:   :<<  后面添加 任意符号都可以
+:<<EOF
+echo 1
+echo 2
+EOF
+发现上面代码什么都没有输出,因为是注释呀
+-----------------------
+a=20;
+let "a++";   #let之后的变量可以不用$
+--------------------------
+while语句: 和if不一样while和do和done后面都不需要加分号
+int=1;
+while(( $int<=5 ))
+do echo $int;
+    let "int++";
+done
+----------------------
+while写成一行:
+int=1; while(( $int<=5 )) ; do echo $int;    let "int++";done
+----------------------
+bash for:
+(( i=1;i<100  ; i++ )) ; do echo $i ; done        #输出1-100
+
+---------------------
+until:  和while相反,在满足条件的时候停止执行
+a=0
+until [ ! $a -lt 10 ]
+do
+   echo $a
+   a=`expr $a + 1`
+done
+--------------------------
+read string  string2;echo "${string}${string2}" ; read读取内容会以  变量的形式存下来
+-----------------------------
+read用法:
+read aaa;
+然后输入chushiyun.
+echo $aaa  #结果是chushiyun
+---------------------
+带有提示的read:
+read -p "what is your name" name
+输入chushiyun
+echo $name
+-----------------------
+读超时:
+read -t 3 aaa;
+3秒之内不输入,或者没有输入完成,退出read命令
+----------------------
+读入数组:
+read -a arr;
+输入:  aaa bbb ccc
+echo ${arr[@]}
+---------------------
+read -n 5 name;   #指定读取字符数
+read -d ';' name;   #结束符
+stty erase ^H;  read; #  read模式的退格问题
+read -s name;   #隐藏输入字符
+-----------------------
+函数:    $n 是第n个参数,  $* 参数列表    函数不能直接在命令行定义,需要在文件中定义
+function f1(){
+  echo "$*"
+}
+f1 chushiyun wo
+----------------------------
+查看补全命令:
+complete -p | less;
+complete | l
+支持哪些补全:
+路径名
+文件名
+主机名
+用户名
+变量名
+==========================================
+set命令:   如果要关闭用  set +x,set +u,set +e即可
+默认是即使没有变量也不报错    例如  echo $asdasdfsd; 只是没有输出
+set -x   #默认情况不打印输入的语句,设置这个参数就会先打印语句,再输出结果
+例如: echo 1234;  #先打印语句echo 1234; 再输出结果
+set -u  (unset) #默认如果变量没有定义,后面的代码继续执行,设置这个参数如果变量没有定义终止执行后面的代码
+例如: echo $zzz;echo 1;   #zzz不存在,终止代码
+set -e  (error) #默认有了错误,不会终止,设置了这个
+例如: a b; echo 1;  #a b是不存在的命令,终止
+
+-u和-e的区别:
+-u只是变量名不存在,就终止   -e是发生错误才终止
+===============================================
+set -x;
+ecoh 1;
+echo 2;
+a b;
+echo 3;
+
+
+for (i=1; i<=100; i++)
+do
+  echo $i
+done
+-------------------------------------------
+vim scp://root@47.94.99.71//root/71.txt     #编辑远程文件   注意地址后面有ip后面有2个//
+-------------------------------------------
+ssh-keygen -t rsa
+-------------------------------------------
+echo abc |tr [a-z] [A-Z]   #小写转大写
+echo ABC |tr [A-Z] [a-z]  #大写转小写
+echo abc   | tr "a" "c"    #tr  转换字符
+echo abcab   | tr  -d "ab"   # -d 删除字符(注意是删除string中的所有字符,不是删除整个string)
+echo 1234 | tr [0-9] [a-j]   #  数字集 转换为字母
+-------------------------------------
+----------------------------------------
+恢复删除的文件:
+debugfs
+open /dev/vda1 #需要之前先df查看被删除文件所在分区
+ls -d /root/apache-tomcat-7.0.64/webapps    #查看删除文件所在的目录(找到尖括号的内容)如<396513>
+logdump -i <396513>    会出现 (0+1)blocks  123456然后
+dd if=/dev/vda1 of=/tmp/mobile.bak bs=4096 skip=123456
+
+dd if=/dev/vda1 of=/tmp/mobile.bak bs=4096 skip=3534
+iconv -f GBK -t UTF-8 mobile.bak  -o mobile.csv
+519268
+tmp目录下的mobile.bak就是还原的文件
+-----------------------------------------
+man -k zip  查看有哪些命令包含zip
+mount |column -t    按照表来输出
+cat /etc/passwd |column -t -s:  　把空格或者":" 来分割为tab
+-----------------------------------------------
+加密解密:
+gzexe a.txt        #加密
+gzexe -d a.txt     #解密
+tar -zcf - a.txt |openssl des3 -salt -k 123@123 | dd of=a.txt.des3      #加密
+dd if=a.txt.des3 |openssl des3 -d -k 123@123 | tar zxf -     #解密
+-------------------------------------------
+ll 各个字段(列)的含义:
+文件属性  文件数  所属用户 所属组 size date filename
+-------------------------------------------
+size date filename
+文件属性 文件数 用户  组  size date filename
+----------------------
+同步时间:
+报错:the NTP socket is in use, exiting  因为:  ntpdate 服务正在用
+ntpdate ntpdate time.windows.com;     #时间同步命令
+-----------------------
+base64 加密解密:
+echo chushiyun |base64   #加密    Y2h1c2hpeXVuCg==
+echo Y2h1c2hpeXVuCg== | base64 -d  #解密  chushiyun
+echo -n 'hello'|md5sum|cut -d ' ' -f1    # md5
+----------------------------
+sl命令:(小火车)
+sl如何退出:  ctrl+c是不行的    可以关闭shell窗口,或者等几秒,让它跑完
+----------------------------
+yes命令:   重复输出一个字符串,直到kill掉他    如:  yes chushiyun
+---------------------
+cal命令: 显示日历
+cal   #显示当前日历
+cal 08 2018  #显示某月日历
+cal -j  # 显示julian(朱利安)日历
+------------------------
+banner命令:
+yum -y install banner ;
+banner hello world    # 把后面的字符串用banner形式显示
+------------------------
+cowsay命令:
+yum -y install cowsay;
+cowsay hello world;   #画一头奶牛  然后说出  后面跟的字符
+
+groups  #显示当前用户所属组
+users   #当前用户
+
+xshell禁用提示音:  工具---选项---高级---终端---禁用铃声.
+或者windows设置声音也可.
+------------------------
+java变量名正则:
+echo "1234234," |awk '/[a-zA-Z$_][a-zA-Z0-9$_]*/'     #注意: 正则中"-"表示到,所以如果要表示这个字符,需要用\-
+------------------------
+cmder添加到右键:
+右键以管理员身份运行cmder, 输入:Cmder.exe /REGISTER ALL
+
+cmder 官网下载地址:(完全包)
+https://github.com/cmderdev/cmder/releases/download/v1.3.11/cmder.zip
+--------------------------
+
+------------------------
+
+
+--------------------------
+linux 关机命令:
+shutdown -h  相当于shutdown -h +1     1分钟后关机
+shutdown -h +0  立刻关机
+shutdown -h 22:00 今天22点关机
+shutdown -h +1000  1000分钟后关机
+shutdown -c 取消关机
+----------------------------
+win7 关机命令:
+shutdown -s  一分钟后关机
+shutdown -s -t 3600  一小时后关机
+shutdown -a 取消关机
+----------------------------
+seq 10 一个参数是end
+seq 1 10     2个参数是start,end
+seq 1 2 10   3个参数是start,step,end
+=========================
+
+-----------------------------
+
+
+=========================
+-----------------------------------------
+read文件:
+#!/bin/bash
+cat a.txt | while read line
+do
+echo "lilne: "$line
+done
+-------------------------------------------
+#!/bin/bash
+while read line
+do
+echo "lilne: "$line
+done < a.txt
+-------------------------------------------
+读取文件:  只有paraa变量能够收到值
+cat a.txt | while read paraa parab parac
+do
+echo "PARAA:"$paraa
+echo "PARAB:"$parab
+echo "PARAC:"$parac
+done
+------------------------------------------
+逐行读取文件内容并输出到另外一个文件:
+cat a.txt | while read line
+do
+echo "line: "$line
+done > result.txt
+------------------------------------------
+shell中的try catch: 注意换行
+{
+  ddd
+} ||
+{
+  echo "e"
+}
+----------------------------------------
+for i in "ls *.$1"
+do
+   	ls $i
+done
+-----------------------------------------
+快速传递的方法:  有些资源慢,可以通过linux服务器来下载,速度非常快. 然后再sz到本地.
+例如: python2.7.5  可以wget https://www.python.org/ftp/python/2.7.5/python-2.7.5.amd64.msi
+--------------------------------------
+ftp 默认的匿名用户:
+帐号: anonymous
+密码: ftp
+
+ftp能连接上,但是无法显示远程文件夹:
+在ftp的客户端, 属性---选项---去掉"使用被动模式"前面的勾
+
+ftp 默认的目录是 /var/ftp 然后就是用户的目录,  例如test用户  那么他的目录就是 /var/ftp/test
+
+
+anonymous_enable=NO   #    ftp禁止匿名用户登录  注意,必须是设置为=NO  如果原来为YES,光注释是没有用的
+local_enable=YES   # 一般设置为YES,  NO表示只允许匿名用户登录
+anon_upload_enable=YES    # 是否允许匿名用户 上传
+
+chroot的意思: 是限制用户的意思
+-------------------------------
+这2个其实不用去掉注释,默认就是这个
+chroot_list_enable=YES # 默认yes  表示启用限制用户的功能
+chroot_list_file=/etc/vsftpd/chroot_list  # 限制用户的文件地址  默认不设置,就是这个
+----------------------------
+chroot_local_user=YES  #  用户限制在主目录,如果不做设置,那么是可以向上切换到其他目录的
+-----------------------
+这2个互斥设置,一般都这么设置:
+listen=NO
+listen_ipv6=YES
+---------------------------
+
+userlist_enable=YES    #  当为NO时, userlist_deny自动无效   除了ftpusers之外都可以登录ftp
+userlist_deny=YES    # 只有在userlist_enable=YES时才有效,  默认是YES (user_list内的用户也不能用)  设置为NO时,只有user_list内的才能登录.匿名也无法登录了
+这个的默认说明在user_list文件中.  不在vsftpd.conf中.
+
+一般userlist_enable都是=YES的,   所以ftpusers和user_list都不能用
+userlist_deny
+Default: YES
+
+userlist_enable
+Default: NO
+-----------------------------------
+ftpusers 里面的永远都不能用
+---------------------------------
+local_umask=022  # 表示创建文件夹和文件的默认规则
+新建的文件和和文件的默认权限:
+目录的权限是755  文件的权限是644
+----------------------------------
+/sbin/nologin和/斌/false:
+/sbin/nologin  只是不能登录ssh,一般用于ftp中
+/bin/false  既不能登录ssh,也不能登录ftp
+------------------------------------
+/home/etl/data-integration/data/productcase.sh
+----------------------------------------
+哪些情况会触发邮件提醒:
+You have new mail in /var/spool/mail/root
+----------------------------------------
+如果要关闭邮件提醒:
+执行：
+echo "unset MAILCHECK" >> /etc/profile
+source /etc/profile
+查看
+ls -lth  /var/spool/mail/
+清空：
+cat /dev/null > /var/spool/mail/root
+----------------------------------------
+查看一个路径是否是软连接:
+file  /etc/init.d  # 返回   /etc/init.d: symbolic link to `rc.d/init.d'
+
+查看一个文件下所有的软连接:
+file -type l -maxdepth 1     # 当前目录下  所有一级目录中的软连接
+===============================================
+安装sqlite:
+man sqlite3;
+yum -y install sqlite sqlite-devel
+输入sqlite进入命令行界面.
+.quit   # 退出sqlite命令行
+.help   # 查看注释
+.databases
+.tables
+
+
+创建数据库:
+再shell界面输入  sqlite3  db_store.db;  #这样就会传经
+
+PRAGMA foreign_keys = ON;  # sqlite开启外键
+
+sqlite创建表:
+CREATE TABLE COMPANY(
+   ID INT PRIMARY KEY     NOT NULL,
+   NAME           TEXT    NOT NULL,
+   AGE            INT     NOT NULL,
+   ADDRESS        CHAR(50),
+   SALARY         REAL
+);
+INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+VALUES (1, 'Paul', 32, 'California', 20000.00 );
+
+INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+VALUES (2, 'Allen', 25, 'Texas', 15000.00 );
+
+INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+VALUES (3, 'Teddy', 23, 'Norway', 20000.00 );
+
+INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+VALUES (4, 'Mark', 25, 'Rich-Mond ', 65000.00 );
+
+INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+VALUES (5, 'David', 27, 'Texas', 85000.00 );
+
+INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+VALUES (6, 'Kim', 22, 'South-Hall', 45000.00 );
+
+docker info报错： Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
+这是因为没有启动    systemctl restart docker即可。
+
+====================================

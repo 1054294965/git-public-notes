@@ -1,0 +1,436 @@
+//powershell笔记
+get-help 查看命令的用法
+get-command 查看命令列表
+powershell中条件都有横杠 '-'
+
+如何查看powershell命令中的特殊符号(列别名)??
+get-command列表的name就是对应的列别名。
+
+===========================
+管道命令：
+where-object
+foreach-object
+select-object(First、Last、Unique、Skip 和 Index---这些参数前面不用加-)
+sort-object
+tee-object 保存并输出结果到变量或者文本中。
+group-object 对列表项或输出结果进行分组
+measure-object
+Compare-Object  对对象进行比较
+
+powershell默认支持的.net类型：
+[array],[bool],[byte],[char],[datetime],[decimal],[double],[guid],[hashtable],[int16],[int32],[int],[int64],[long],[nullable],[psobject],[regex],[sbyte].[scriptblock],[single],[float],[string],[switch],[timespan],[type],[uint16],[uint32],[uint64],[ XML ]
+
+get-item和get-childItem的区别： get-childItem可以使用-recurse参数，迭代子文件夹
+ls 可以获取文件的大小   $file =ls ttt.txt;  $file.length;       因为 length本来就是file的一个属性
+
+获取所有运行中的服务: get-service |where-object {$_.status -eq "running"}
+powershell中禁止执行脚本解决办法: 输入 get-ExecutionPolicy,一般显示Restricted。 输入set-executionpolicy remotesigned,再执行即可。
+
+
+日期过滤： ls | where-object {$_.creationTime -gt "2018-03-28"}  日期格式可以是"2018年3月28日"，"2018-03-28","2018/03/28"
+文件大小过滤： ls | where-object {$_.length -gt 100}    默认是kb
+文件大小排序：get-childitem |sort-object length -Descending
+文件名过滤： ls | where-object {$_.name -like "*ppp*"}  字符串是必须的，也可以用-eq，但是不如like好
+时间排序：ls | where-object {$_.name -like "*p*"} |sort-object LastWriteTime     默认正序
+时间倒序排序： ls |sort-object LastWriteTime -descending      倒序排序
+多列排序：get-childitem |Sort-Object @{expression="lastwritetime"},@{expression="length";descending=$true}  多列排序需要用到hashtable了
+后缀，扩展名进行分组： ls | Group-Object Extension
+自定义条件分组(文件大小是否大于1kb)：ls | Group-Object {$_.Length -gt 1kb}
+
+===============================
+自定义列：get-childitem | select-object Name
+
+C:\Users\15233\Desktop\1\1.csv
+
+
+获取服务(状态)：
+get-service mysql
+
+获取进程：
+get-process *chrome*       chrome后面没有.exe
+
+获取环境变量
+$env:windir
+
+获取网卡：
+get-netadapter
+
+获取ip地址：get-netIpAddress
+
+
+测试端口： Test-NetConnection 127.0.0.1 -port  8080
+测试链接： Test-NetConnection www.baidu.com  8080
+获取日期：get-date
+
+双冒号（::），静态成员运算符。
+
+
+环境变量： 如$home 是c:/users/chushiyun  $windir 是c:/windows
+添加环境： 会添加到用户环境变量中，永久有效
+[environment]::SetEnvironmentvariable("ddd","dddvalue","User")
+[environment]::getEnvironmentvariable("ddd","User")
+
+curl请求：
+Invoke-WebRequest http://m.ehaier.com/v3/mstore/sg/credit/findStoreMemberRecord.html?ownerId=10000187
+
+
+导出环境变量:
+get-item env: >environment.txt
+====================
+function Get-ConsoleCommand
+{
+$ext = $env:pathext -split ';' -replace '\.','*.'
+$desc = @{N='Description'; E={$_.FileVersionInfo.FileDescription}}
+Get-Command -Name $ext |
+   Select-Object Name, Extension, $desc |
+   Out-GridView
+}
+
+
+============
+$range = 1..100
+For($i=0; $i -lt $range.Count; $i++) {
+  echo  $i
+}
+
+查看windows版本: winver
+搜索注册表：
+Dir HKCU: -recurse -include *PowerShell*
+
+=================
+Function Ping2 { PING.exe -n 1 $args }
+ping2 www.baidu.com
+
+获取函数内容： $function:MyPing
+删除函数：del Function:myPing
+查看所有函数： get-childitem function:
+===================
+查看ip地址:
+function Show-IPAddress {
+　　Get-NetIPAddress | `
+　　? { $_.IPAddress -match "^10\.*|^192\.*|^172\.*"} | `
+　　Select-Object IPAddress
+}
+杀掉进程：
+关闭notepad，记事本： get-process notepad |stop-process -force
+关闭notepad，记事本(通过-inputobject)： $processes=get-process notepad;  stop-process -inputobject $processes -force;
+关闭notepad，记事本(通过-id)： stop-process -id 12341;
+关闭notepad，记事本(通过-name)： stop-process -name notepad;   双引号可以不加
+
+启动进程：start-process notepad
+
+=====================
+while循环
+while ($ctr -lt 10)
+             {
+               $ctr +=1
+               if ($ctr -eq 5) {continue}
+               Write-Host $ctr
+             }
+=========================
+关闭进程脚本：
+calc
+$p = get-process calc
+stop-process -inputobject $p
+get-process | where-object {$_.HasExited}
+
+打印数组：
+write-host (2,4,6,8,10,12) -Separator ", -> " -foregroundcolor DarkGreen -backgroundcolor white
+
+
+新建对象： (这样就不用创建属性了)
+$object="" |select-object -property name,address,administrator;
+$object.name="chushiyun";
+$object.address="shijiazhuang";
+$object.administrator="chushiyun";
+$object;
+
+
+C:\PS>$a = "this is a string"
+
+   C:\PS> $a = add-member -inputobject $a -membertype scriptmethod -name words `
+   -value {$this.split()} -passthru
+
+   C:\PS> $a.words()
+================
+数组
+
+$array=5..8;
+$array=1,123,1234;
+$array.getType()
+$array+=13241;
+新建空数组：$arr=@();$arr -is [array];
+新建数组：  $arr=@(111,2222,333);$arr;
+单元素数组：$arr=,1234123;$arr;
+混合类型数组： $array=1,"abc",1.1;
+获取数组长度： $array.count  或者length，不用size
+从数组中选择多个元素： $result=ls;  $result[0,3,5,8];
+给数组追加元素： $result=1,13; $result+=444;$result;
+修改数组元素的值： $result=111,222; $result[0]=333;   $result.setValue(444,1);$result;
+
+是否是数组： $ip -is [array]
+数组逆序输出: $arr=1111,222,333;  $arr[$arr.count..0];
+追加元素： $arr=@();$arr+=111;$arr;
+复制数组： $arr=@(111,222,333);  $arr2=$arr.clone(); $arr2;
+强类型数组： [int[]] $arr=@();$arr+="aaa";  ---报错：无法将值“aaa”转换为类型“System.Int32”。错误:“输入字符串的格式不正确。”
+
+创建数组和创建map的区别： $()是数组@{}是map       ---括号和大括号
+------------------------
+创建map(哈希表)： $map=@{aaa="111";bbb="222"};  $map;   ---json是 ":"和","    powershell是 "="和";"
+获取map元素：  $map=@{aaa="111";bbb="222"};  $map["aaa"];   ---获取时key需要加双引号
+map中存放数组：$map=@{ Name = "小明";Age="12";sex="男";Books="三国演义","围城","哈姆雷特" }; $map;
+map中插入元素：$map=@{};  $map.ccc="333"; $map;
+map删除元素：$map=@{aaa="111";bbb="222"};  $map.remove("aaa");  $map;
+======================================
+$a=11;
+$b=22;
+if($a -gt b){
+  write-host "yes";
+}else{
+  write-host "yes";
+}
+
+去重： get-content aaa.txt |Sort-Object -Unique
+
+多条件排序：
+get-childitem |sort-object -property @{expression="name";descending=$true},@{expression="LastWriteTime";descending=$false}
+
+导出csv:
+get-process | export-csv processes.csv -Delimiter ;
+get-process | export-csv processes.csv -Delimiter ","           ---逗号是非法字符，所以需要加双引号
+
+栅格显示：
+get-childitem |out-gridview    ---gridview会单独的开一个窗口
+====================
+for循环打印sql语句：
+for($i=1;$i -le 100;$i++)
+{
+  $id=$i;
+  $type="aaa"+$id;
+  $string="insert into mobile(id,type) values("+$id+",'"+$type+"')";
+  write-host $string;
+}
+
+==========================
+反射： obj |get-member 可以获取对象的类型
+[System.String] |get-member  这个获取的是运行时的类型，因为[]时静态类，相当于class的类型是，RuntimeType
+获取对象类型：  "".GetType().FullName
+获取第一个元素： (get-childitem)[0]  前面的括号必不可少，否则报错。
+获取对象的所有属性（Get-Member -MemberType property）： $obj=(get-childitem)[0];  $obj | Get-Member -MemberType Property;
+获取对象的所有方法（Get-Member -MemberType method）： $obj=(get-childitem)[0];  $obj | Get-Member -MemberType method;
+
+
+获取对象的属性：  "".gettype() 或  "".gettype().name
+获取对象的成员变量： 如果使用管道符号，前面的是数组，后面实际获取的是单个的对象:     "" |get-member
+
+
+查看静态方法:[Math] | get-member -static
+调用静态方法：[Math]::Abs(-10.89)
+
+write-host 和write-output的区别： write-output支持管道   如write-host ""| get-member 错误。write-output ""| get-member 正确。
+
+sort-object降序排序：
+ get-process chrome |sort-object -descending id  或者get-process chrome |sort-object -property id -Descending
+
+sort-object根据属性排序：
+ get-process chrome |sort-object -property id
+
+input-object 可以跟在管道命令后面， 也可以使用-input-object ***来指定传入的对象。
+
+format-list和format-table： format-list更加的清楚，format-table是默认的格式。
+
+powershell中的@是什么意思：（@是列别名的意思,label表示列别名，expression是该列的表达式）
+如get-service | where-object {$_.DependentServices} | format-list -property Name, DependentServices, @{Label="NoOfDependentS
+    ervices"; Expression={$_.dependentservices.count}}
+
+获取依赖的服务：get-service winrm -requiredServices
+
+invoke-expression调用  字符串形式的命令(一定要加双引号)    $command="get-process" ,invoke-expression $command  或  &"ls"
+invoke-expression还可以计算string结果  如$mul="2*3"  ,invoke-expression $mul
+---------------------------
+查看所有环境变量 ls env: 或  get-item env: 即可，记住不是$env:
+查看单个环境变量，$env:tmp
+新建环境变量：$env:env1 ="evn1
+模糊查询环境变量：get-item env:*tm*  注意*号要紧挨着冒号
+------------------------
+环境变量生效:
+[environment]::SetEnvironmentvariable("Path", ";c:\powershellscript", "User")
+[environment]::GetEnvironmentvariable("Path", "User")
+---------------
+
+查看所有alias ：    输入alias即可
+查看单个alias： 如$alias:write ，$alias:ls
+模糊查询alias        alias  *wr*
+
+------------------------
+字符串
+$string="阿里巴巴";
+out-string -inputobject $string -width 5
+单双引号和多行文本：  '' 表示纯文本，不解析$**等变量， "" 会解析其中的$**变量 ,@``@内部是多行文本---注意@`和`@都必须单独一行。
+----------------------------------------
+string操作：
+
+ (“Hello”).Contains(“ll”)
+ (“Hello”).EndsWith(“lo”)
+	(“Hello”).IndexOf(“l”)   下标
+  (” HelloWorld “).Trim()
+  (“HelloWorld”).ToUpper()
+------------------------
+"aaa:bbb:ccc".split(":")     分隔符
+创建对象不能用new，该用new-object String("adfasdfsdf")
+
+连接字符串：$a=-Join("abc","def","ghi");$a;
+使用分隔符连接字符串：$b="abc","def","ghi" -Join ":";   $b;
+string还支持乘法： $string1="abc";   $string2=$string1*3;   $string2;
+
+空格-分隔字符串：$a="abc def ghi";   -Split $a;
+分隔符-分隔字符串：$a="abc:def:ghi";   $a -Split ":";
+
+提示输入 $name=Read-Host "请输入您的用户名";输入之后再打印   $name;
+格式化字符串和占位符：  “{0} {3} at {2}MB fit into one CD at {1}MB” -f (720mb/1.44mb), 720, 1.44, “diskettes”;
+格式化制表输出： dir | ForEach-Object { "{0,-20} = {1,10} Bytes" -f $_.name, $_.Length }    {0,-20}解释: 0表示右边第一个参数，-20复数表示右对齐，正数表示左对齐
+
+单冒号什么意思：   $private:array   ---表示方法中的私有变量，调用的时候可以直接$array
+左边补齐  "aaa".padleft(10) 默认是空格，       "aaa".padleft(10,"b");用指定字符补齐
+---------------------
+简单模式匹配：   win7只能支持  *和?
+*	任意个任意字符，（包含零个字符）	Dir *.txt
+?	一个任意字符	Dir *.??t
+[xyz]	一个包含在指定枚举集合中的字符	Dir [abc]*.*
+[x-z]	一个包含在指定区间集合中的字符	Dir *[p-z].*
+-------------------------
+报错：stop-process : 由于以下错误而无法停止进程“Taskmgr (13260)”: 拒绝访问。   ---权限问题
+报错： 方法调用失败，因为 [System.Collections.DictionaryEntry] 不包含名为“count”的方法     DictionaryEntry是map的entry，不是list，所以没有count属性
+
+$list =ls env:;
+$list.count()
+
+ets是什么：是“扩展类型系统”Extended Type System (ETS),ETS会对管道中对象转换成文本的机制进行宏观调控。
+ETS由两部分组成，一部分控制对象的版式，一部分控制对象的属性，今天主要关心第一部分。
+wmi是什么：wmi(windows management instrumentation)   window管理组件
+
+
+判断对象是否存在: Test-Path $obj;
+删除对象： $obj.Delete();$obj;    如果不是空需要加参数才能删除。
+@‘ ’@ 用来编辑代码。
+
+使用命令让记事本打开文件： notepad zzz.txt
+========================
+xml处理：  变成xml格式之后就可以使用.属性来操作xml对象了
+$xmldata = [xml](Get-Content settings.xml)
+
+
+ $xmldata.SelectNodes("server/id[0]")
+
+
+ ==============
+创建文件夹   mkdir dir333 或 new-item dir444 -type directory
+创建文件   new-item file.txt -type file
+重定向  >（右箭头或者管道符号）    如  ls > list.txt      ls |out-file list2.txt       ls | set-content list3.txt
+双箭头重定向  出现空格， 是因为字符集不同。 使用set-content,add-content或者out-file可以有效的规避这个问题。
+
+设置文件内容  set-content zzz.txt "aaaaa"
+添加文件内容  add-content zzz.txt "bbbb,ccc";   add-content zzz.txt "dddd"
+读取逗号分隔的内容 import-csv ttt.txt
+${c:/users/chushiyun/zzz.txt}      如果知道绝对路径  ${path}可以获取文件的内容
+
+复制文件  copy-item zzz.txt  zzz333.txt 或   copy-item zzz.txt  ./zzz333.txt
+移动文件  move-item zzz.txt zzz555.txt   会删除zzz.txt
+重命名： rename-item zzz.txt zzz222.txt
+
+批量重命名  Dir | ForEach-Object {Rename-Item $_.Name -NewName ('Test_'+$_.Name)  }
+
+==================
+
+字符,字符分为4种：
+文字字符：像”abc”确切地匹配”abc“字符串
+转义字符：一些特殊的字符例如反斜杠，中括号，小括号在正则表达式中居于特殊的意义，所以如果要专门识别这些特殊字符需要转义字符反斜杠。就像”\[abc\]”可以识别”[abc]”。
+预定义字符：这类字符类似占位符可以识别某一类字符。例如”\d”可以识别0-9的数字。
+自定义通配符：包含在中括号中的通配符。例如”[a-d]”识别a,b,c,d之间的任意字符，如果要排除这些字符，可以使用”[^a-d]”。
+限定符  ？+*  {}等
+定位符  ^  $  \A \Z \b \B   开头结尾符号
+=============
+匹配边界  "Nov" -match "\bNov(ember)?\b"
+大小写敏感  "hello" -cmatch "heLLO"   或者  [regex]::matches("test", "TEST", "IgnoreCase")
+
+选择输出列：  ls |Select-Object -property name  或 ls |format-table name,length    或 ls |format-list name,length
+
+
+-----------------
+几个常用的非贪婪匹配Pattern
+*? 重复任意次，但尽可能少重复
++? 重复1次或更多次，但尽可能少重复
+?? 重复0次或1次，但尽可能少重复
+{n,m}? 重复n到m次，但尽可能少重复
+{n,}? 重复n次以上，但尽可能少重复
+
+正则中的@  "@"就是告诉编译器,这些特殊字符是作为字符串中的一部分存在的,编译器就不会去编译它了.     例如正则中包含路径
+
+match方法  $reg="zhang\w*"; "zhangsan" -match $reg; $matches;
+reg 替换：    "Mr. Miller and Mrs. Meyer" -replace "(Mr.|Mrs.)", "Our client"
+==========================
+反向转义：  $n表示第几个匹配的表达式， n是从1开始的  0表示整个匹配的结果，1表示第一个自表达式,就是括号里面的内容
+# 替换串文本必须放置单引号中，反向引用才能工作，
+# $2才会替换成子表达式返回的值
+"Mr. Miller, Mrs. Meyer and Mr. Werner" -replace "(Mr.|Mrs.)\s*(Miller|Meyer)", 'Our client $2'
+# Our client Miller, Our client Meyer and Mr. Werner
+
+# 另外也可以使用转义字符 `$来标记$:
+"Mr. Miller, Mrs. Meyer and Mr. Werner" -replace "(Mr.|Mrs.)\s*(Miller|Meyer)", "Our client `$2"
+# Our client Miller, Our client Meyer and Mr. Werner
+========================
+删除多余的空格:    "太多    太多的   空格 怎么才能减少 " -replace "\s{2,}" ," ";
+去掉重复的单词： "太多 太多 的话 我还没有说， 太多 太多 太多 的理由值得你留下" -replace "\b(\w+)(\s+\1){1,}\b", '$1';
+获取非空行： $fullText=Get-Content ./ttt.txt | where { !([string]::IsNullOrWhiteSpace($_))}; $fullText;
+跳过前几行： $text=get-content ttt.txt|select-object -skip 4;
+
+添加列名： Import-Csv .\link.txt -Header "link" ;
+导出url中的host： Import-Csv .\link.txt -Header "link" | foreach { ( [uri]($_.link) ).Host }
+定义字符串： $string ="asdfadf";   $string;      或 $string ="dir is $env:windir"; $string;  //单引号中会当作文本，双引号会解析文本中的变量
+
+
+$xmldata = [xml](Get-Content ttt.txt);$xmldata;
+
+返回主目录: cd ~  或cd $home
+
+
+查看网络状态：netstat
+通过IPConfig查看自己的网络配置：ipconfig
+查看路由信息：route print
+
+退出：  exit  或 stop-process -id 13040 或  stop-process -name powershell_ise
+查看可用的cmd命令： Cmd /c help
+查看列别名： get-alias  或 ls env:
+
+包含列别名的alias： get-alias |where-object{$_.definition.Contains("R")}        ---区分大小写
+创建alias ：  Set-Alias -Name Edit -Value notepad   ，然后输入edit就是调用notepad，      ---关闭powershell会自动清除
+
+生成uuid(guid):       [system.guid]::newguid()
+
+测量命令执行时间： Measure-Command -Expression {get-winevent -logname system |Select-Object totalmilliseconds}
+
+=============================================
+powershell分割excel文件
+1、split_excel.ps1文件放到桌面
+2、win+r打开运行,输入powershell，回车
+3、编辑如下命令，复制到powershell中，回车运行即可
+C:\Users\Administrator\Desktop\split_excel.ps1   C:\Users\Administrator\Desktop\0731-H5\h5.csv  500000
+注： C:\Users\Administrator\Desktop\split_excel.ps1       是脚本文件的路径
+    C:\Users\Administrator\Desktop\0731-H5\h5.csv     是大csv文件的路径
+    500000是一个文件多少条
+csv默认用excel打开虽然方便，但是默认只在第一行。
+只能每个打开的时候都设置一下分隔符，才会分为多列。
+==============================================
+
+
+
+powershell 在此系统上禁止运行脚本：
+set-ExecutionPolicy RemoteSigned
+
+杀掉java进程：(8080端口)
+stop-process -name java; #光杀java不行，因为可能是javaw还在
+stop-process -name javaw;
+
+杀掉端口进程：
+netstat -ano |findstr "8080";    #  找到8080对应的进程号     这里的netstat和linux不一样，不能用nltp
+taskkill /pid 15560 /f;   #    /pid后面要跟着进程号

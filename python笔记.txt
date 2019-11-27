@@ -1,0 +1,975 @@
+python3的安装位置:
+C:\Users\chushiyun\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Python 3.7
+python2.6.6的安装位置:
+C:\Python26
+python2.7.5的安装位置:
+C:\Python27
+
+python manage.py makemigrations net   #  可以不加app名  那么就是所有模块都生成迁移文件
+python manage.py migrate
+
+
+Python manage.py test net
+
+python manage.py shell
+-----------------------
+python manage.py shell 进入命令行:
+from net.models import Student
+s.save()
+s=Student(name="wangwu", age="50")
+s.id    # save方法虽然没有返回值,执行保存后, 调用这个对象.id属性  可以获取自增的id值
+-----------------------
+s=Student.objects.create(name="maliu", age="60")   # 这样是可以直接插入到数据库中的
+all=Entry.objects.all();    # 这个获取的是所有的结果
+------------------------
+[0]和get和filter的区别:
+当确定只有一个结果的时候可以用get(name='adfs'),
+如果获取不到,那么会报错: net.models.DoesNotExist       # 对象不存在
+如果有多个结果,也是会报错的:  net.models.MultipleObjectsReturned  # 多个对象返回了
+filter 即使没有符合条件的结果,也是不错报错的.
+[0]如果没有对应下标的数据,自然是要报错的.
+---------------------
+filter常见用法:  双下划线表示附加条件查询,   附加条件一定要用双下划线,双下划线,双下划线
+filter(name='lisi')     # 如果后面不加 __ ,那么相当于  __exact
+filter(name__exact='lisi')
+
+filter(name__iexact='lisi')  # 忽略大小写
+filter(name__contains='lisi')  # like 语法的实现
+filter(name__icontains='lisi')  # 忽略大小写的 contains
+filter(name__in=['lisi','wangwu'])  #  in的用法
+
+
+filter(addtime__range=('2013-09-01 17:52:54','2020-09-01 17:52:54'))   # between and的用法,这里用range
+filter(addtime__year='2014')   # 年     使用时间的时候会有时区问题,设置USE_TZ = False 即可
+filter(addtime__month='09')   # 月
+filter(addtime__day='03')   # 日
+
+
+
+values是获取结果集中该字段的集合:  只能选取一个字段,如果多个会报错的
+inner = Student.objects.filter(name__in=['lisi','wangwu']).values('age')
+result= Student.objects.filter(age__in=inner)
+---------------------------------
+
+raw_sql = 'select * from student'
+        raw_querySet = Student.objects.raw(raw_sql)
+        print(raw_querySet)
+        # for s in raw_querySet:
+        #     print(s)
+
+进入python解释器的方法:(都是需要有环境变量的)
+第一种:
+cmd-输入python,即可打开
+
+第二种:
+python -c print(1234123)  ;   #后面还可以加参数的
+===========================
+python格式一定要对齐,否则报错
+==============================
+print输出字符串和变量:
+一个参数:
+a=111
+print('a的值是%s: '%(a))
+-----------------
+sep 和end  sep=', '设置分隔符   end='!' 设置结尾符
+-----------------------------
+2个参数:
+a=111
+b=222
+print('%s 的值是 %s'%(a,b))
+==========================
+C:\Users\chushiyun\AppData\Local\Programs\Python\Python37
+python配置环境变量:
+安装python,找到python的目录
+C:\Users\chushiyun\AppData\Local\Programs\Python\Python37
+在环境变量中创建变量 PYTHON_HOME, 值为 C:\Users\chushiyun\AppData\Local\Programs\Python\Python37
+在path中添加:  ;%PYTHON_HOME%;
+打开一个新的cmd, 输入python, 如果出现python命令提示符表示环境变量配置成功.   (注:一定是新打开个cmd,老cmd用的还是老的环境变量)
+
+pip配置环境变量:
+如python的安装位置是:
+C:\Users\chushiyun\AppData\Local\Programs\Python\Python37
+创建环境变量 PIP_HOME
+C:\Users\chushiyun\AppData\Local\Programs\Python\Python37\Scripts
+再path中添加:  ;%PIP_HOME%;
+打开一个新的cmd, 输入pip, 如果出现命令提示符表示环境变量配置成功.   (注:一定是新打开个cmd,老cmd用的还是老的环境变量)
+
+
+wget https://sourceforge.net/projects/pydev/files/pydev/PyDev%204.5.2/PyDev%204.5.2.zip/download
+修改download为download.zip ,然后解压.放到eclipse dropins.
+重启eclipse,oreference---输入py---python interpreter---advanced auto-cofig---根据提示一步一步即可.
+============================
+# -*- coding: UTF-8 -*-  或者    #coding=utf-8      编码格式
+python语言一定要特别注意缩进
+int,long,float,complex  #注意没有double
+报错：ImportError: No module named support
+报错:IndexError: tuple index out of range   数组下标越界
+报错:IndentationError: expected an indented block     缩进不正确(期待一个缩进块)
+报错(Warning: (1051, "Unknown table 'EMPLOYEE'"))   其实这个不能算报错pymysql中有drop语句就会提示这个.
+报错:TypeError: set expected at most 1 arguments, got 6     set(1,2,3)这样的创建方式是不对的  可以用set((1,2,3)) 或者set([1,3,34])
+报错(ImportError : cannot import name urlopen): 把 from urllib import urlopen ,改写成 from urllib.request import urllib
+报错: Non-ASCII character '\xe4' in file    # python2中默认编码是ascii,如果直接print("中文")就报错 ,在开头添加 #-*-coding:utf-8 -*-
+----------------------
+报错: SyntaxError: Non-ASCII character '\xe4' in file test.py on line 3, but no encoding
+3种办法: 开头添加以下任何一种都可以
+#-*-coding:utf-8 -*-
+#-*-coding:utf-8 -*-
+#vim: set fileencoding:utf-8
+----------------------
+django报错:
+Creating test database for alias 'default'...
+Got an error creating the test database: (1007, "Can't create database 'test_mysite'; database exists")
+Type 'yes' if you would like to try deleting the test database 'test_mysite', or 'no' to cancel:
+这是再测试模板的时候,会创建一个同名的加前缀的test_数据库,如果这个库存在, 他就创建不了,所以会报错.  去数据库删掉这个酷即可. 或者在报错界面,直接输入yes,删掉也行.
+--------------------------
+pycharm导入自己写的.py文件时，模块下方出现红色波浪线解决  右键代码所在的文件夹---mark directory as sources root
+同级目录无法导入:   右键代码所在的文件夹---mark directory as sources root
+
+
+python package同级目录下的文件无法导入  例如com包下的tiger文件.  import tiger报错.   应该用import ccc.tiger   为什么导入test可以呢,估计是python有个自带的module叫做test
+--------------------------
+查看帮助文档:
+help(str)  或者dir(str)
+help(str.center)   #查看单个文档
+退出help()命令的三种方法:   输入q,   或者直接回车   ,或者按ctrl+z
+python 可以输入哪些命令:  help", "copyright", "credits" or "license"
+--------------------------
+django查看帮助文档:
+python manage.py # 也是一样的,查看命令列表
+python manage.py help  #　查看manage.py 命令列表
+python manage.py help runserver #　查看manage.py 某个具体的命令
+
+------------------------
+执行python文件:
+./hello.py 或者 如果有python环境变量,也可以python hello.py
+------------------------
+python环境变量:
+print("chushiyun\rzhangfei")    #\r无效
+print("chushiyun\nzhangfei")
+print("chushiyun\tchinese")
+print("chushiyun\fchinese")  # \f为什么是上箭头 不是换行符么
+
+print(r"chushiyun\nchinese")      # r字母 不进行转义
+
+print("""\
+Usage: thingy [OPTIONS]
+     -h                        Display this usage message
+     -H hostname               Hostname to connect to
+""")
+
+"chu" + "shi"      # +号  连接字符串
+"chu" "shi"     #
+3 * "chu" + "shi"  #  *号 重复符号
+----------------------------------
+text = ('Put several strings within parentheses '
+            'to have them joined together.')
+输入text,打印内容
+-----------------------------------
+
+
+-------------------------
+同一行显示多条语句:
+import sys; x = 'runoob'; sys.stdout.write(x + '\n')
+
+print x,print y  和print x,y   都是不换行输出
+----------------------------
+del删除变量:  会报错,因为aaa已经被删除了
+aaa =111
+del aaa
+print aaa
+----------------------------
+\ 表示换行符
+yum install python34-devel　　　#可以执行
+pip install mock  #
+
+pip install MySQLdb
+
+install
+
+python可以每行加分号么?  可以,不影响执行
+(1,2,3,4) tuple  元组
+[1,2,3,4] list  列表
+{1:2,3:4} dict  字典
+--------------------------
+python2和python3的混合模式：
+import sys
+if sys.version_info >= (3, 3):
+    from unittest.mock import MagicMock
+else:
+    from mock import MagicMock
+---------------------------
+num = 4
+if num > 5:
+    print("big")
+elif num < 5:
+    print("small")
+else:
+    print("medium")
+
+----------------------------
+自定义函数:
+def add(a,b):
+    return a+b
+def sub(a,b):
+    return a-b
+
+print(add(2,3))
+print(sub(5,3))
+----------------------------
+更改调用名称：
+import logging as log
+log.critical("www")
+
+---------------------------
+raw_input函数:      (raw_input是交互输入)
+str=raw_input('请输入：')
+print str
+----------------------
+open函数:  open和file是相同的函数
+fp=open('a.txt')
+str=fp.read()
+fp.close()
+print(str)
+
+
+============================
+open的几种模式:
+r 只读
+w 只写
+a 只追加
+r+ 可读写,在开头写
+w+ 可读写,先全部删除,再写
+a+ 可读写,在后面写
+rb+ 按照byte来读取
+--------------------
+with语句的作用:  语句执行之后,文件总是会被关闭
+with open("myfile.txt") as f:
+    for line in f:
+        print(line)
+---------------------
+
+
+读取文件:
+f = open('file.txt', 'r')
+print(f.read(2))     #读取指定长度内容
+print(f.read())      #读取全部
+print(f.readline() +" this")
+-------------------------
+write 默认是往第一行开头添加,如果加上\n表示添加完换行
+f = open('file.txt', 'r+')
+f.write("zhangfei")
+f.write("guanyu\n")
+print(f.read())
+==============================
+join函数:
+a='111'
+b='222'
+c=a.join(b)
+print c
+-------------------
+all函数:  集合元素是否全都非空
+list=[1,'',2]       #  null字段不算是空
+all(list)
+any函数:  是否有任何非空元素
+any(1,'')     #  0,'',false  都属于空   其他的都不是
+---------------------
+ord函数:  返回一个字符的ascii值
+ord('a')
+chr函数: 根据ascii值  返回字符
+chr(97)
+-------------------
+arr=[111,222,333]
+print(arr[0])
+
+del(arr[0])
+print(arr)
+
+del(arr[:])
+print(arr)
+
+print len([1,2,3])        #len() 求数组的长度
+
+----------------------
+del(arr[:]) 和 del arr 的区别:
+del(arr[:]) 是清空数组
+del arr  是删除这个数组
+----------------------
+元组和数组区别:
+输出数组是[]
+输出元组是()
+----------------------
+dict(字典)和map:   dict相当于java中的map,  注意: key需要用双引号
+wo={"name":"chushiyun" ,"age":30}
+print(wo)
+print(wo["name"])
+print(wo["age"])
+----------------------
+dict还可以这样创建:
+map2=dict(AAA=111,bbb=222,ccc=333)
+print(map2)
+----------------------
+hasattr
+----------------------
+locals函数:  返回当前位置的全局局部变量
+---------------------
+range函数: 3个参数(start,stop,step)  step是步长,间隔
+range(1,10)   创建1-10,不包括10的数组
+range(1,10,2)   创建1-10,步长是2的数组
+----------------
+import math          # ceil需要到处math,然后用math.ceil调用
+math.ceil(1.23)
+----------------------
+forx循环:
+for  i in range(1,10):
+  print i;
+----------------------
+1到100求和:
+sum = 0
+for i in range(0,101,1):
+    sum+=i
+print(sum)
+-----------------------
+'chushiyun'.capitalize()    # 首字母大写
+'chushiyun'.center(20,'*')  #  在string两边用符号补全到指定长度
+'chushiyun'.count('u')  #  统计字符串出现的次数
+'chushiyun'.count('u',5,8)  #  统计字符串出现的次数  在下标之间出现的次数
+'chushiyun'.endswith('yun')   # 以***结尾
+'chushiyun'.endswith('yun',1,5)   # 指定下标范围  以***结尾
+'chu\tshiyun'.expandtabs()   # 将\t tab字符转换为几个字符,默认是8个
+'chu\tshiyun'.expandtabs(16)   # 将\t tab字符转换为16个字符
+
+--------------------------
+'chushiyun'.encode('base64','strict')  #编码  Y2h1c2hpeXVu
+'Y2h1c2hpeXVu'.decode('base64','strict')  #解码为 chushiyun
+
+-------------------------------
+python2中的乱码问题:
+读写文件的时候文件名必须是unicode形式,如   open(u'日分析.csv'.encode('utf'))
+但是在附件流中,就需要是具体的字节流了      u'日分析.csv'.encode('utf').decode('utf-8')
+-----------------------------
+python2 默认的编码方式是ascii
+如果开头加了 # -*- coding: utf-8 -*-  那么默认的编码方式是  utf-8
+如果要创建gbk编码,需要前面加u指定,unicode编码.  u'中文'.encode('gbk')
+
+======================
+format函数:
+print '{0},{1},{1}'.format('aaa','bbb')    #{0} 第一个参数   {1} 第二个参数
+print '{},{},{}'.format('aaa','bbb')   # 默认对照  in和out参数个数需要一致,否则报错(IndexError: tuple index out of range)
+---------------------------------
+python的格式化占位符:
+%c	 格式化字符及其ASCII码
+%s	 格式化字符串
+%d	 格式化整数
+%u	 格式化无符号整型
+%o	 格式化无符号八进制数
+%x	 格式化无符号十六进制数
+%X	 格式化无符号十六进制数（大写）
+%f	 格式化浮点数字，可指定小数点后的精度
+%e	 用科学计数法格式化浮点数
+%E	 作用同%e，用科学计数法格式化浮点数
+%g	 %f和%e的简写
+%G	 %f 和 %E 的简写
+%p	 用十六进制数格式化变量的地址
+-----------------------------
+python2升级为python3:
+wget http://www.python.org/ftp/python/3.3.0/Python-3.3.0.tgz    下载python3
+
+=============================
+pip  #是否安装了pip
+pip -V  #查看pip版本
+whereis pip #pip命令的位置(这个是linux命令)
+pip install --upgrade pip  #升级pip
+
+pip install --upgrade PyMySQL
+pip install ***;  #安装某个库
+pip uninstall ***;  #卸载库
+pip list ;   #查看安装的库
+pip list --outdated;  #对比本地库和最新库  显示已安装的版本和最新的版本
+pip show requests;  #查看安装库的详细信息(包括版本信息)
+python -m pip uninstall pip; #卸载pip(可以卸载,问题是怎么安装)
+pip freeze > requirement.txt  #列出当前安装的所有包,输出到文件
+pip install -r requirements.txt # 安装文件中的所有包
+pip search sympy   # 搜索包含关键字的模块名称
+--------------------------------------
+pip 批量安装还可以直接编辑多行如下:
+pip install sasl
+pip install thrift
+pip install thrift-sasl
+pip install PyHive
+--------------------------------------
+pip install -U django   #pip更新包
+---------------------------------------
+pip提示:
+You are using pip version 18.1, however version 19.0.2 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+使用更新命令: pip install --upgrade pip  #升级pip
+--------------------------------
+pip安装:
+wget https://bootstrap.pypa.io/get-pip.py;    # 下载所需包
+python get-pip.py;    #安装
+pip; #验证是否安装成功
+==============================
+requests包的安装:
+wget https://github.com/kennethreitz/requests/tarball/master -O master.tar.gz  #下载
+tar xvfz master.tar.gz   #解压   目录名看解压信息就行
+cd requests-requests-c501ec9;   #进入解压后的mu.u
+python setup.py install;     #安装
+python;    #进入python命令行
+import reuqests;   #  导入requests模块   不报错就是没有问题
+====================================
+import calc #导入模块
+print(calc.add(2,3))   #调用模块  需要在前面加 模块名
+--------------------------------
+如果需要频繁使用一个函数,可以把函数赋值给本地变量
+import calc
+add=calc.add
+print(add(2,3))
+====================================
+百度首页爬虫:  (为什么不是乱码)
+import urllib2
+response = urllib2.urlopen("http://www.baidu.com")
+print response.read()
+==================================
+python连接数据库:
+yum install gcc python-devel mysql-devel zlib-devel openssl-devel;  #先安装基础包(可能已经安装了)
+pip install MySQL-python;   #安装mysql-python
+-----------------------------
+输入:
+import MySQLdb         #好像应该是pymysql吧
+db = MySQLdb.connect("localhost", "root", "1234", "test", charset='utf8' ) #连接数据库
+cursor = db.cursor()    #获取操作游标  相当于session
+cursor.execute("SELECT VERSION()")    #执行语句
+data = cursor.fetchone()   #获取一条语句
+print "Database version : %s " % data   #打印
+db.close()
+--------------------------------------
+python脚本:
+#!/usr/bin/python
+print "hello python";
+
+./test.py 或者 python ./test.py
+----------------------------------------
+boolean  True or False  首字母小写
+pass占位符  相当于 //TODO
+=========================
+python内置属性列表:
+'__class__'
+ '__delattr__'
+ '__dict__'
+ '__dir__'
+ '__doc__'
+ '__eq__'
+ '__format__'
+ '__ge__'
+ '__getattribute__'
+ '__gt__'
+ '__hash__'
+ '__init__'
+ '__init_subclass__'
+ '__le__'
+ '__lt__'
+ '__module__'
+ '__ne__'
+ '__new__'
+ '__reduce__'
+ '__reduce_ex__'
+ '__repr__'
+ '__setattr__'
+ '__sizeof__'
+ '__str__'
+ '__subclasshook__'
+ '__weakref__'
+------------------------
+内置属性打印语句:
+print('self.__class__: %s '%(self.__class__))
+        print('self.__delattr__: %s '%(self.__delattr__))
+        print('self.__dict__: %s '%(self.__dict__))
+        print('self.__dir__: %s '%(self.__dir__))
+        print('self.__doc__: %s '%(self.__doc__))
+        print('self.__eq__: %s '%(self.__eq__))
+        print('self.__format__: %s '%(self.__format__))
+        print('self.__ge__: %s '%(self.__ge__))
+        print('self.__getattribute__: %s '%(self.__getattribute__))
+        print('self.__gt__: %s '%(self.__gt__))
+        print('self.__hash__: %s '%(self.__hash__))
+        print('self.__init__: %s '%(self.__init__))
+        print('self.__init_subclass__: %s '%(self.__init_subclass__))
+        print('self.__le__: %s '%(self.__le__))
+        print('self.__lt__: %s '%(self.__lt__))
+        print('self.__module__: %s '%(self.__module__))
+        print('self.__ne__: %s '%(self.__ne__))
+        print('self.__new__: %s '%(self.__new__))
+        print('self.__reduce__: %s '%(self.__reduce__))
+        print('self.__reduce_ex__: %s '%(self.__reduce_ex__))
+        print('self.__repr__: %s '%(self.__repr__))
+        print('self.__setattr__: %s '%(self.__setattr__))
+        print('self.__sizeof__: %s '%(self.__sizeof__))
+        print('self.__str__: %s '%(self.__str__))
+        print('self.__subclasshook__: %s '%(self.__subclasshook__))
+        print('self.__weakref__: %s '%(self.__weakref__
+================================
+_开头是protected变量,子类可以使用
+__开头是private变量,只有本类可以使用
+私有变量的作用域:
+class Foo:
+    string="zhangfei"
+    __string2="guanyu"
+
+    def echo(self):
+        print(self.__string2)
+
+x=Foo()
+print(x.string)  #如果是 print(x.__string2) 那么就不行
+x.echo()
+================================
+退出python        exit()
+------------------------------
+python报错:  SyntaxError: Non-ASCII character '\xe6' in file ./test.py on line 3, but no encoding declared;
+头部添加 # -*- coding: utf-8 -*
+-----------------------------
+python报错: 'pandas' has no attribute 'read_csv'
+奇怪的是明明安装了这个包啊, 先pip uninstall pandas,然后再 pip install pandas,  发现还是不行
+最后发现犯了个低级错误,文件名  就叫做pandas.py 所以覆盖了包里面的pandas. (起名的时候一定避免和module重名)
+------------------------------
+python报错: 'encoding' is an invalid keyword argument for this function
+python 2.7 以前的版本,open函数 没有encoding这个属性
+------------------------------
+python报错: NameError: name 'unicode' is not defined
+ Python2 的unicode 函数在 Python3 中被命名为 str。在 Python3 中使用 ·str 来代替 Python2 中的 unicode.
+-------------------------------
+unicode 和utf-8的区别：
+unicode的形式为 \u65e5\u6790  同一字符对应的  unicode是不会变的.
+utf-8 或者gbk的形式都是  \xfe\xd5\x77等
+------------------------------
+
+#!/usr/bin/python
+# -*- coding: utf-8 -*
+import MySQLdb
+# 打开数据库连接
+db = MySQLdb.connect("localhost", "root", "1234", "test", charset='utf8' )
+# 使用cursor()方法获取操作游标
+cursor = db.cursor()
+# 使用execute方法执行SQL语句
+string="select version()"
+cursor.execute(string)
+# 使用 fetchone() 方法获取一条数据
+data = cursor.fetchone()
+print("Database version : %s " % data)
+# 关闭数据库连接
+db.close()
+------------------------------
+=======================================
+python破解教程:
+PyCharm安装包的获取地址：https://www.jetbrains.com/pycharm/download/#section=windows]。
+首先打开连接（放心下载，绝对安全）https://pan.baidu.com/s/1qtxqNBJxXAjpshhNHJsxSw
+插件放在PyCharm/bin 目录下
+打开bin目录下的pycharm.exe.vmoptions ,添加如何一行内容(如果有pycharm64.exe.vmoptions也是可以的)
+-javaagent:C:\Program Files\JetBrains\PyCharm 2019.1.2\bin\JetbrainsCrack-2.6.10-release-enc.jar
+然后进入如下网站,获取激活码:http://idea.lanyus.com/    打开pycharm的时候,复制到激活码的位置
+打开hosts文件  加入 0.0.0.0 account.jetbrains.com 及 0.0.0.0 www.jetbrains.com (这个不确定,我加了激活不了,去掉反而激活了,看个人的情况),修改完这个我并没有重启
+
+0.0.0.0 account.jetbrains.com
+0.0.0.0 www.jetbrains.com
+========================================
+查看python的安装位置:
+打开shell命令行:  输入  where python
+C:\Users\chushiyun\AppData\Local\Programs\Python\Python37-32\python.exe
+--------------------------------------
+python报错(编译报错): indent expected     是因为for 循环中的代码应该是缩进的
+
+__name__的作用：
+表示一个文件是被谁调用的    如果是被自己调用的  是__main__ ,如果是被别人调用的是  例如Test类,那么 __name__就是Test
+========================================
+pycharm安装库:
+file---settings for new projects ---project interpreter---选中一个python.exe---点击+号 ---输入pip ---等待提示安装完成即可.
+==============================================
+dir(Circle)   查看类的内置变量
+__str__():    python 对象默认的打印方法
+
+====================================
+pip 不是内部或外部命令:
+python -m ensurepip
+pip -V        #如果还是报错的话
+python -m pip install readline    #readline表示打印日志
+
+pip安装报错: You are using pip version 18.1, however version 19.1.1 is available.
+You should consider upgrading via the 'python -m pip install --upgrade pip' command.
+输入命令: python -m pip install --upgrade pip
+
+如果直接输入pip命令报错,也可以输入这个命令: python -m pip install itchat
+======================================
+python操作数据库:
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+import pymysql
+# 打开数据库连接
+db = pymysql.connect("47.94.203.224", "root", "1234", "test", charset='utf8' )
+# 使用cursor()方法获取操作游标
+cursor = db.cursor()
+# 使用execute方法执行SQL语句
+cursor.execute("SELECT VERSION()")
+# 使用 fetchone() 方法获取一条数据
+data = cursor.fetchone()
+print("Database version : %s " % data)
+# 关闭数据库连接
+db.close()
+========================================
+pycharm  打开md文件卡死: (这是因为pycharm自带的markdown support 插件的问题)
+settings---plugins---搜索markdown support---取消勾选,重启即可.
+
+pycharm 跳转到代码所在位置:
+左侧树的瞄准图标就是  Scroll from Source
+------------------------------------------
+def inner():
+    global a
+    a=1
+inner()  # 要先执行这个方法,才能使全局变量生效
+print(a)
+------------------------------------------
+list中的::-1 是什么意思   表示全部倒序     (注:如果用-2则不是这么用)
+random的sample函数   sample(seq, n) 从序列seq中选择n个随机且独立的元素； (如果整个列表都是相同的数,那么没办法,会选n个相同的数)
+pycharm代码自动提示:   file---->power save mode，把这个前面的√号去掉即可。
+
+=====================================
+第一个web例子:
+新建一个项目,创建main.py文件,输入内容:
+#!/usr/bin/env python
+from bottle import default_app, get, run
+from beaker.middleware import SessionMiddleware
+
+# 设置session参数
+session_opts = {    'session.type': 'file',
+    'session.cookie_expires': 3600,
+    'session.data_dir': '/tmp/sessions/simple',
+    'session.auto': True
+}
+
+@get('/index/')
+def callback():
+    return 'Hello World!'
+
+# 函数主入口
+if __name__ == '__main__':
+    app_argv = SessionMiddleware(default_app(), session_opts)
+    run(app=app_argv, host='0.0.0.0', port=9090, debug=True, reloader=True)
+
+运行main.py,地址栏输入 127.0.0.1:9090/index/  出现hello world表示成功
+=====================================
+python配置数据库:
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',//数据库的类型
+        'NAME': 'test',                    //所使用的的数据库的名字
+        'USER': 'root',                      //数据库服务器的用户
+       'PASSWORD': '1234',                 //密码
+        'HOST': '127.0.0.1',                 //主机
+        'PORT': '3306',                      //端口
+    }
+}
+-------------------------
+django反向生成数据库:     反向生成的时候会自动去掉第一个下划线前的前缀
+python manage.py inspectdb
+python manage.py inspectdb  > net/models.py   # net是模块名
+-------------------------
+class Meta:   # meta  是数据库的原类
+    managed = False   # managed=False  表示不会根据类模型,自动生成数据库表
+    db_table = 'net_person'  # db_table 对应数据库中的表名
+
+==========================================
+
+是否安装了pip:
+linux命令行中直接输入pip ,如果显示语法提示那么就表示安装了.
+
+安装pip的命令:
+pip install --upgrade pip
+
+还有一种安装pip的方法:
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+然后运行命令 python get-pip.py
+
+下面是安装python-pip的命令:(pip和python-pip一样么)
+yum install python-pip
+==========================================
+pycharm 创建多个app:
+tools---run manage.py task---输入命令 startapp my_app  ,这里的my_app是app名称---回车即可.
+==========================================
+pycharm制作exe文件:
+settings---安装pyinstaller.
+然后进入要打包的py文件所在的目录,切换到terminal,输入命令:
+pyinstaller -F -w test.py
+就会再dist目录下生成test.exe文件.  (这个文件如果在没有python环境变量的环境下执行,不一定能执行)
+===========================================
+启动django项目:
+python manage.py runserver   然后访问: 127.0.0.1:8000出现django界面表示启动成功.(注意是8000)
+还可以加参数,如:
+python manager.py runserver --host 0.0.0.0 --port 9008   #这种写法是不对的
+python manager.py runserver 0.0.0.0:8001   # 这是正确写法   或者直接些个端口号也是可以的
+------------------------
+python manage.py shell  #打开命令行窗口(可以用来执行一些命令)
+python manage.py dbshell #打开对应的数据库命令行
+===========================================
+python -m django --version    #查看django版本
+django-admin startproject mysite3  #创建一个django工程
+python manage.py runserver  #启动django工程
+===========================================
+python官网手册,查看中文文档    左上角的python---english---选为simplified chinese
+-------------------------------------------
+else和break      else语句默认执行,只有在break的情况下才不执行
+-------------------------------
+timeit计算一段代码执行的时间
+from timeit import Timer
+print(Timer('t=a; a=b; b=t', 'a=1; b=2').timeit())
+print(Timer('a,b = b,a', 'a=1; b=2').timeit())
+---------------------------------
+列操作(列模式): alt+shift+左键
+
+打印当前文件路径:
+import sys
+print(sys.argv[0])
+
+-----------------------------
+PyCharm设置注释颜色:
+settings---color schema---python---lime comment---选颜色即可.
+PyCharm设置注释(""" 这样的注释)颜色:
+settings---color schema---python---doc string---text---选颜色即可.
+
+reg中match和search的区别:
+match 是从开头找
+search 是只要文中有就行
+------------------------
+python生成exe文件:
+pip install pyinstaller
+右键需要打包的文件,open in terminal---输入 pyinstaller -F 文件名---成功后,当前目录会生成一个dist文件夹,下面的同名exe文件就是可执行程序.
+---------------------------
+django-admin startproject mysite2   # 命令行创建django项目
+再setting文件中INSTALLED_APPS中添加一行  'net',
+python manage.py makemigrations polls # 生成映射关系   如果修改了model,要进行测试.一定要记得,重新makemigrations,因为为了效率,测试时直接用生成好的文件进行测试.
+python manage.py sqlmigrate polls 0001  #  迁移模型的命令
+python manage.py check   # 检查项目中的问题, 但是并不执行语句
+=============================
+django-admin的作用:   DJANGO_SETTINGS_MODULE 参数是用来指定配置文件
+使用 django-admin 时，你可以一次性设定环境变量，也可以在运行此工具时，显式地传入配置模块。
+export DJANGO_SETTINGS_MODULE=mysite.settings
+django-admin runserver
+------------------------
+
+===================================
+指定配置文件的方法:
+第一种:
+export DJANGO_SETTINGS_MODULE=mysite.settings
+django-admin runserver
+第二种:
+使用 --settings 命令行参数指定配置模块路径:
+django-admin runserver --settings=mysite.settings
+第三种:
+在服务器环境下，要通知WSGI应用当前使用的是哪个配置文件，用到 os.environ:
+import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
+-------------------
+django为什么不需要配置,因为有默认的配置,都在 django/conf/global_settings.py中.
+Django按如下算法编译配置模块:
+从 global_settings.py 中加载配置项。
+从指定的配置文件中加载配置项，覆盖对应的全局配置项。
+注意: 配置文件中不要再重复引用 global_settings，因为这样做是多余的。
+====================================
+
+改变模型需要这三步：
+编辑 models.py 文件，改变模型。
+运行 python manage.py makemigrations 为模型的改变生成迁移文件。
+运行 python manage.py migrate 来应用数据库迁移。
+其实如果是修改了表结构,根本不会变.
+需要先删除migration文件,然后删掉数据库,从新执行即可.
+
+配置文件 settings settings映射文件java高手
+
+
+path的4个参数:
+path() 参数： route
+route 是一个匹配 URL 的准则（类似正则表达式）。当 Django 响应一个请求时，它会从 urlpatterns 的第一项开始，按顺序依次匹配列表中的项，直到找到匹配的项。
+path() 参数： view
+当 Django 找到了一个匹配的准则，就会调用这个特定的视图函数，并传入一个 HttpRequest 对象作为第一个参数，被“捕获”的参数以关键字参数的形式传入。稍后，我们会给出一个例子。
+path() 参数： kwargs
+任意个关键字参数可以作为一个字典传递给目标视图函数。本教程中不会使用这一特性。
+path() 参数： name
+为你的 URL 取名能使你在 Django 的任意地方唯一地引用它，尤其是在模板中。这个有用的特性允许你只改一个文件就能全局地修改某个 URL 模式。
+
+python 不用用test作为文件名  因为这已经是个module名了
+
+================================
+pycharm激活码:  注意从网站复制的时候,会默认带有第一行中文,一定要去掉
+
+目前已经可以实现正版永久激活不用破解 购买地址：http://v.rootoot.com/ 需要的可以花点小钱                                                  此激活到期时间为2019年11月：   YZVR7WDLV8-eyJsaWNlbnNlSWQiOiJZWlZSN1dETFY4IiwibGljZW5zZWVOYW1lIjoiamV0YnJhaW5zIGpzIiwiYXNzaWduZWVOYW1lIjoiIiwiYXNzaWduZWVFbWFpbCI6IiIsImxpY2Vuc2VSZXN0cmljdGlvbiI6IkZvciBlZHVjYXRpb25hbCB1c2Ugb25seSIsImNoZWNrQ29uY3VycmVudFVzZSI6ZmFsc2UsInByb2R1Y3RzIjpbeyJjb2RlIjoiSUkiLCJwYWlkVXBUbyI6IjIwMTktMTEtMjYifSx7ImNvZGUiOiJBQyIsInBhaWRVcFRvIjoiMjAxOS0xMS0yNiJ9LHsiY29kZSI6IkRQTiIsInBhaWRVcFRvIjoiMjAxOS0xMS0yNiJ9LHsiY29kZSI6IlBTIiwicGFpZFVwVG8iOiIyMDE5LTExLTI2In0seyJjb2RlIjoiR08iLCJwYWlkVXBUbyI6IjIwMTktMTEtMjYifSx7ImNvZGUiOiJETSIsInBhaWRVcFRvIjoiMjAxOS0xMS0yNiJ9LHsiY29kZSI6IkNMIiwicGFpZFVwVG8iOiIyMDE5LTExLTI2In0seyJjb2RlIjoiUlMwIiwicGFpZFVwVG8iOiIyMDE5LTExLTI2In0seyJjb2RlIjoiUkMiLCJwYWlkVXBUbyI6IjIwMTktMTEtMjYifSx7ImNvZGUiOiJSRCIsInBhaWRVcFRvIjoiMjAxOS0xMS0yNiJ9LHsiY29kZSI6IlBDIiwicGFpZFVwVG8iOiIyMDE5LTExLTI2In0seyJjb2RlIjoiUk0iLCJwYWlkVXBUbyI6IjIwMTktMTEtMjYifSx7ImNvZGUiOiJXUyIsInBhaWRVcFRvIjoiMjAxOS0xMS0yNiJ9LHsiY29kZSI6IkRCIiwicGFpZFVwVG8iOiIyMDE5LTExLTI2In0seyJjb2RlIjoiREMiLCJwYWlkVXBUbyI6IjIwMTktMTEtMjYifSx7ImNvZGUiOiJSU1UiLCJwYWlkVXBUbyI6IjIwMTktMTEtMjYifV0sImhhc2giOiIxMTA1NzI3NC8wIiwiZ3JhY2VQZXJpb2REYXlzIjowLCJhdXRvUHJvbG9uZ2F0ZWQiOmZhbHNlLCJpc0F1dG9Qcm9sb25nYXRlZCI6ZmFsc2V9-rsJR5mlJcjibqRu1gQAMUCngMe8i+AOWIi+JZkNFYPET2G1ONcLPcIzoATTRi6ofkDm5l+3Y4HXjBPjVU6bHDdMBAzCnUqpXKsCknwSYyPSU0Y5pzuLvw6O9aPlQ46UBoTEC2BL5W6f11S7NlAq7tTbDuvFUynqSGAmTEfuZtKmzRmp20ejTPuMlSO7UqSkZvkg6YvSTrax1d2K+P9SAmVGZ9iC7AzBs4AwTf84QB9qHvE/Nh0oELSHWGG9hsZZ7sVghI/39/jPQFTp8GLFsl36ZPybPhGDam721zxS9H++/eJk23Jz3nxaRluE4dWmpHrDg1qBHp8qVpSFejg2QYw==-MIIElTCCAn2gAwIBAgIBCTANBgkqhkiG9w0BAQsFADAYMRYwFAYDVQQDDA1KZXRQcm9maWxlIENBMB4XDTE4MTEwMTEyMjk0NloXDTIwMTEwMjEyMjk0NlowaDELMAkGA1UEBhMCQ1oxDjAMBgNVBAgMBU51c2xlMQ8wDQYDVQQHDAZQcmFndWUxGTAXBgNVBAoMEEpldEJyYWlucyBzLnIuby4xHTAbBgNVBAMMFHByb2QzeS1mcm9tLTIwMTgxMTAxMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxcQkq+zdxlR2mmRYBPzGbUNdMN6OaXiXzxIWtMEkrJMO/5oUfQJbLLuMSMK0QHFmaI37WShyxZcfRCidwXjot4zmNBKnlyHodDij/78TmVqFl8nOeD5+07B8VEaIu7c3E1N+e1doC6wht4I4+IEmtsPAdoaj5WCQVQbrI8KeT8M9VcBIWX7fD0fhexfg3ZRt0xqwMcXGNp3DdJHiO0rCdU+Itv7EmtnSVq9jBG1usMSFvMowR25mju2JcPFp1+I4ZI+FqgR8gyG8oiNDyNEoAbsR3lOpI7grUYSvkB/xVy/VoklPCK2h0f0GJxFjnye8NT1PAywoyl7RmiAVRE/EKwIDAQABo4GZMIGWMAkGA1UdEwQCMAAwHQYDVR0OBBYEFGEpG9oZGcfLMGNBkY7SgHiMGgTcMEgGA1UdIwRBMD+AFKOetkhnQhI2Qb1t4Lm0oFKLl/GzoRykGjAYMRYwFAYDVQQDDA1KZXRQcm9maWxlIENBggkA0myxg7KDeeEwEwYDVR0lBAwwCgYIKwYBBQUHAwEwCwYDVR0PBAQDAgWgMA0GCSqGSIb3DQEBCwUAA4ICAQAF8uc+YJOHHwOFcPzmbjcxNDuGoOUIP+2h1R75Lecswb7ru2LWWSUMtXVKQzChLNPn/72W0k+oI056tgiwuG7M49LXp4zQVlQnFmWU1wwGvVhq5R63Rpjx1zjGUhcXgayu7+9zMUW596Lbomsg8qVve6euqsrFicYkIIuUu4zYPndJwfe0YkS5nY72SHnNdbPhEnN8wcB2Kz+OIG0lih3yz5EqFhld03bGp222ZQCIghCTVL6QBNadGsiN/lWLl4JdR3lJkZzlpFdiHijoVRdWeSWqM4y0t23c92HXKrgppoSV18XMxrWVdoSM3nuMHwxGhFyde05OdDtLpCv+jlWf5REAHHA201pAU6bJSZINyHDUTB+Beo28rRXSwSh3OUIvYwKNVeoBY+KwOJ7WnuTCUq1meE6GkKc4D/cXmgpOyW/1SmBz3XjVIi/zprZ0zf3qH5mkphtg6ksjKgKjmx1cXfZAAX6wcDBNaCL+Ortep1Dh8xDUbqbBVNBL4jbiL3i3xsfNiyJgaZ5sX7i8tmStEpLbPwvHcByuf59qJhV/bZOl8KqJBETCDJcY6O2aqhTUy+9x93ThKs1GKrRPePrWPluud7ttlgtRveit/pcBrnQcXOl1rHq7ByB8CFAxNotRUYL9IF5n3wJOgkPojMy6jetQA5Ogc8Sm7RG6vg1yow==
+===================================
+
+pycharm 配置mysql数据库:
+选择右边的database---新建一个,按照提示填写即可---注意jar包最好自己指定,因为下载的总是最新的,不一定匹配你的mysql版本---然后test connenction,如果连接通过即可.
+
+
+pycharm管理多个interpreter, 点击右边的settings,show all---然后在这个界面进行修改即可.
+
+
+----------------------------
+django数据库执行 python manage.py makemigrations报错:
+django.core.exceptions.ImproperlyConfigured: mysqlclient 1.3.3 or newer is required; you have 0.7.11.None
+pip show mysqlclient 找到mysqlclient安装的位置,路径后面再加上 django\db\backends\mysql\ 修改base.py文件中的 1.3.3这句话,注释掉即可.
+----------------------------
+django数据库执行 python manage.py makemigrations报错:
+AttributeError: 'str' object has no attribute 'decode'django\db\backends\mysql\
+找到mysqlclient包下的 operations.py文件:  注释掉if query 那2句即可.
+def last_executed_query(self, cursor, sql, params):
+    # With MySQLdb, cursor objects have an (undocumented) "_executed"
+    # attribute where the exact query sent to the database is saved.
+    # See MySQLdb/cursors.py in the source distribution.
+    query = getattr(cursor, '_executed', None)
+    # if query is not None:
+        #query = query.decode(errors='replace')
+    return query
+----------------------------------
+Django：报错 raise MigrationSchemaMissing("Unable to create the django_migrations table (%s)" % exc)
+Django2.1不再支持MySQL5.5，必须5.6版本以上
+解决方案:
+（1）Django降级到2.0  (https://pypi.douban.com/simple 是豆瓣的python包镜像库,速度很快)
+pip install Django==2.0.0 -i https://pypi.douban.com/simple
+（2）MySQL升级
+
+我这里用的是 Django降级到2.0,  成功解决问题.
+---------------------------------
+豆瓣的镜像源:
+pip install Django==2.0.0 -i https://pypi.douban.com/simple
+pip install pycrypto -i https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/    #清华大学镜像站  这个地址好像不能直接这么用
+
+path()好repath():
+re_path() 是正则表达式路径定义,用来解决常规的路径定义解决不了的问题.
+
+shortcuts
+polls.models
+--------------------------------
+render函数的参数:
+def render(request, template_name, context=None, content_type=None, status=None, using=None):
+
+request: 是一个固定参数, 没什么好讲的。
+template_name: templates 中定义的文件, 要注意路径名. 比如'templates\polls\index.html', 参数就要写‘polls\index.html’
+context: 要传入文件中用于渲染呈现的数据, 默认是字典格式
+content_type: 生成的文档要使用的MIME 类型。默认为DEFAULT_CONTENT_TYPE 设置的值。
+status: http的响应代码,默认是200.
+using: 用于加载模板使用的模板引擎的名称。
+
+例如:
+render(request, 'polls/detail.html', {'poll': p})
+----------------------------------
+pycharm 取消双击shift出现搜索框:
+双击shift打开这个搜索框---点击设置---搜若registry---找到 ide.suppress.double.click.handler---勾选上即可(注意,这里的勾选是不想要的功能)
+-----------------------------
+django报错: Forbidden (CSRF cookie not set.): /net/attr/
+注释掉settings中的csrf中间件即可.
+--------------------------------
+pycharm中的多窗口运行: 例如一个服务器 一个本地的python
+terminal是服务器的窗口, run是python的结果串口.
+--------------------------------
+django报错: MultiValueDictKeyError at /net/param/
+请求中如果没有传递这个参数,但是request.POST['key1'] 这样调用了,就会出现这个错误.
+----------------------------------
+django报错: AttributeError at /net/attr
+print(request.meta)  没有request.meta这个属性,就会报这个错.
+其实只要是有的属性即可,例如这里应该写为request.META (区分大小写的)
+如果要获取META中的某个属性. 用 print(request.META['HTTP_HOST'])
+-----------------------------------
+django报错:  You are trying to add a non-nullable field 'name' to person without a default;
+这个问题发生在修改模型重新生成数据的时候, 解决办法:
+删掉migrations下面除了__init__的所有文件,  去数据库把mysite数据库也删除.  重新生成即可
+-----------------------------
+django报错: ???
+'WSGIRequest' object has no attribute 'headers'
+
+-----------------------------
+HttpRequest.META  这里只是一部分,具体的要看客户端和服务器.
+A dictionary containing all available HTTP headers. Available headers depend on the client and server, but here are some examples:
+CONTENT_LENGTH -- The length of the request body (as a string).
+CONTENT_TYPE -- The MIME type of the request body.
+HTTP_ACCEPT -- Acceptable content types for the response.
+HTTP_ACCEPT_ENCODING -- Acceptable encodings for the response.
+HTTP_ACCEPT_LANGUAGE -- Acceptable languages for the response.
+HTTP_HOST -- The HTTP Host header sent by the client.
+HTTP_REFERER -- The referring page, if any.
+HTTP_USER_AGENT -- The client's user-agent string.
+QUERY_STRING -- The query string, as a single (unparsed) string.
+REMOTE_ADDR -- The IP address of the client.
+REMOTE_HOST -- The hostname of the client.
+REMOTE_USER -- The user authenticated by the Web server, if any.
+REQUEST_METHOD -- A string such as "GET" or "POST".
+SERVER_NAME -- The hostname of the server.
+SERVER_PORT -- The port of the server (as a string).
+------------------------------
+request.headers为什么获取不到:
+因为django2.2才有这个特性
+----------------------------
+django如何进行测试:
+模块下所有test开头的文件.  中的所有继承TestCase的类,中的所有以test开头的方法(这是因为有的方法只是辅助方法,所以test开头的才是需要测试的方法).
+-------------------------------
+django测试的例子:
+class TTT(TestCase):
+    def test1(self):
+        b=True
+        self.assertTrue(b,True)
+---------------------------------
+python 发送邮件:
+import smtplib  # smtp服务器
+from email.mime.text import MIMEText  # 邮件文本
+# 邮件构建
+subject = "滴滴答答"  # 邮件标题
+sender = "chushiyun@ehaier.com"  # 发送方
+content = "新年快乐！"
+recver = "1054294965@qq.com"  # 接收方
+password = "KeTJh8QkgERy1zbB"
+#邮箱密码
+message = MIMEText(content, "plain", "utf-8")
+# content 发送内容     "plain"文本格式   utf-8 编码格式
+
+message['Subject'] = subject  # 邮件标题
+message['To'] = recver  # 收件人
+message['From'] = sender  # 发件人
+
+smtp = smtplib.SMTP_SSL("smtp.qiye.163.com", 465)  # 实例化smtp服务器   这里去掉linux里面配置的smpts:// 因为smpt_ssl已经指定了发送的协议
+smtp.login(sender, password)  # 发件人登录
+smtp.sendmail(sender, [recver], message.as_string())  # as_string 对 message 的消息进行了封装
+smtp.close()
+-------------------------------------------------
+邮件参数列表 SMTP类方法：
+SMTP.connect(host='localhost',port=0)　：链接到远程SMTP主机的方法，host为远程主机地址，port为远程主机smtp端口，默认为25，也可以直接使用host:port形式来表示：如：SMTP.connect('smtp.163.com','25')
+
+SMTP.login(user,password)：登陆需要认证的SMTP服务器，参数为用户名与密码，如SMTP.login('python@163.com','123')
+
+SMTP.sendmail(from_addr,to_addrs,msg,mail_options=[],rcpt_options=[])：实现邮件的发送功能，参数from_addr为发件人，to_addrs为收件人，msg为邮件内容，如：SMTP.sendmail('python@163.com','demo@qq.com',body)。
+
+SMTP.starttls(keyfile=None,certfile=None)：启用TLS安全传输模式，所有SMTP指令都将加密传输，如使用gmail的smtp服务时需哟啊启动此项才能正常发送邮件。
+
+SMTP.quit()：断开smtp服务器链接
+
+SMTP.set_debuglevel(level)：设置调试输出级别，值为1，2或True，发送调试消息到服务器
+
+SMTP.send_message(msg,from_addr=None,to_addrs=None,mail_options=[],rcpt_options=[])：这是使用有email.message.Message对象表示的消息进行调用的便捷方法使用sendmail()，参数的含义与sendmail()相同，只有msg是一个Message对象；如果from_addr是None或者to_addrs是None，则send_message用从msg头部提取的地址填充那些参数，from设置为发件人自动，TO设置为to_addrs。
+---------------------------------------------
+python查看版本变动文档, 下载页面有You can browse the HTML on-line or download the HTML.  点选即可.
+-------------------------------------------
+linux 安装python 3.7.4
+wget https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tgz
+tar -zxvf Python-3.7.4.tgz
+cd Python-3.7.4
+./configure  # 不要管 最后一行出现的 please run ./configure --enable-optimizations,这句话的意思是如果想要优化配置,可以输入这个命令,我们不管他
+make
+make install
+#这里如果报错  zipimport.ZipImportError: can't decompress data; zlib not available       那么执行 yum -y install zlib*  ,不要忘记这个*号
+#如果还报错  ModuleNotFoundError: No module named '_ctypes'   执行命令:   yum install libffi-devel -y   ,3.7需要安装这个包
+继续make install,直到成功
+python --version   # 还是2.7.5
+
+=====================================================
+conda配置环境变量:
+CONDA_HOME=C:\ProgramData\Anaconda3\Scripts
+path中添加 ;%CONDA_HOME%;
+
+命令行输入: activate  进入conda的base虚拟环境
+python --versiion 查看当前虚拟环境的python版本.
+
+conda env list   #查看已有的环境变量
+====================================================

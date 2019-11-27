@@ -1,0 +1,900 @@
+不换行---white-space:nowrap;
+不管是否是单词内，只要到达边界都折行：word-break:break-all;
+新单词折行：word-wrap:break-word;
+
+对齐问题：---td或者给div元素设置width，其实也是对齐
+<tr>
+        <td>{{createTime}}</td>
+        <td>&nbsp;&nbsp;&nbsp;{{sku}}</td>
+        <td>&nbsp;&nbsp;&nbsp;{{goodsName}}</td>
+    </tr>
+
+判断浮动--- pull-right好判断，左浮动只能用ul和li判断了
+清除浮动--- .clearfix{clear:both}   <div class="clearfix"></div> 样式加在最后一个浮动子元素后面
+清除浮动--- .clearfix:after {content: "\0020";display: block;height: 0;clear: both;}  <div class="clearfix"></div> 样式加在父元素上(测试无效)
+这个添加在外围：
+.clearfix:after {
+content: "." ;
+display: block ;
+height: 0 ;
+clear: both ;
+visibility: hidden ;
+}
+.clearfix{ display: inline-block; }
+
+
+on绑定事件绑定不到,  如:$("#id").on("click",".classname",function(){})---推荐写法,$(document).on("click","#id .classname",function(){})
+
+
+js尺寸：
+console.log("$(window).height(): "+ $(window).height()); //浏览器当前窗口可视区域高度
+console.log("$(document).height(): "+ $(document).height()); //浏览器当前窗口文档的高度
+console.log("$(document.body).height(): "+ $(document.body).height());//浏览器当前窗口文档body的高度
+console.log("$(document.body).outerHeight(true): "+ $(document.body).outerHeight(true));//浏览器当前窗口文档body的总高度 包括border padding margin
+console.log("$(window).width(): "+ $(window).width()); //浏览器当前窗口可视区域宽度
+console.log("$(document).width(): "+ $(document).width());//浏览器当前窗口文档对象宽度
+console.log("$(document.body).width(): "+ $(document.body).width());//浏览器当前窗口文档body的高度
+console.log("$(document.body).outerWidth(true): "+ $(document.body).outerWidth(true));//浏览器当前窗口文档body
+
+
+js关闭冒泡：
+function doSomething(e)
+{
+    if (!e) var e = window.event;
+    e.cancelBubble = true;
+    if (e.stopPropagation) e.stopPropagation();
+}
+
+分页原理:
+pageNo
+pageSize
+totalRecords
+totalPages
+firstPage
+prePage
+nextPage
+lastPage
+首页是否可用  if(pageNo<=1){text}---正的逻辑是pageNo>1，可点击。但是有=1的情况，所以用反逻辑最好。
+上一页是否可用 if(pageNo>1){a} ---正逻辑即可
+下一页是否可用 if(pageNo<totalPage){a} ---正逻辑即可
+末页最后 if(page>=totalpages){text}---正的逻辑是pageNo<totalPages，可点击。但是有pageNo=totalPages=1的情况，所以用反逻辑最好。
+------------------------
+占位符:
+var string="key";
+console.log("key: %s",111);
+---------------------------
+console.log()模板：(占位符)
+console.log("string: %s",string)
+console.log("object: %o", {});
+%s 字符串
+%d 整数
+%i 整数
+%f 浮点数
+%o 对象的链接
+%c CSS格式字符串,如： console.log("%c hello","color:red")
+
+分页去掉hover,text-decoration:none;注意是加在li不是a上。
+
+bootstrap禁用上一页，下一页：
+添加disabled样式，a标签去掉href，如：<li class=\"page-first disabled\"><a>«</a></li>
+
+js抛出异常: throw error("asdf");
+
+
+
+css样式后面的覆盖前面的
+
+js报错：Cannot read property 'pageOffset' of undefined  ---变量名是否错了例如pager写成paper。
+
+monitorEvents允许监听同一大类的事件。所有事件可以分成四个大类。(事件可以分为4大类)
+mouse：”mousedown”, “mouseup”, “click”, “dblclick”, “mousemove”, “mouseover”, “mouseout”, “mousewheel”
+key：”keydown”, “keyup”, “keypress”, “textInput”
+touch：”touchstart”, “touchmove”, “touchend”, “touchcancel”
+control：”resize”, “scroll”, “zoom”, “focus”, “blur”, “select”, “change”, “submit”, “reset”
+
+伪元素：例子  ::before和：before相同   :after和::after相同
+p::before{
+  content: 'before content ';
+}
+p::after{
+  content:'after content';
+}
+
+p:first-letter { color: #cd0000; }   伪元素，首字母添加样式
+
+伪元素：首行添加样式
+p:first-line
+{
+background-color:yellow;
+}
+
+
+伪元素，选中内容添加样式:
+::selection{
+  background-color: orange;
+
+}
+
+结构化伪类，不是p的元素，添加样式。
+:not(p)
+{
+background-color: #ffff00;
+}
+
+带边框的表格： table是  border:0;  里面的th和td是border: 1px solid #ddd;
+
+line-height为什么是1.42851723  指的是行高是字体高度的几倍，字体默认是14px，行高默认是20px，20/14就是1.42851723
+
+
+.form-group  只有一个属性就是margin-bottom:15px;  它用来组合表单元素的label和input
+
+html5有哪些输入控件： 如 text、password、datetime、datetime-local、date、month、time、week、number、email、url、search、tel 和 color。
+
+form-control :换行+填充整行
+form-group : 增加块元素的下部留白或下部边界，从而使块元素的间距变大
+
+form-inline使form-control和form-group表现出行内的形式。
+
+cursor: not-allowed; 鼠标移动到上面显示禁用符号。 （红圈斜杠）
+=================================
+a标签去掉下划线   text-decoration: none;
+================================
+background-clip 可选属性值:
+ border-box	背景被裁剪到边框盒。（默认）
+padding-box	背景被裁剪到内边距框。
+content-box	背景被裁剪到内容框。
+=============================
+兄弟选择器+ 和  ~(普通兄弟选择器):  +是相邻的2个兄弟   ~可以是不相邻的2个兄弟。
+================
+span:nth-child和span:nth-of-type  nth-child是先按个数选择，然后匹配是否是span。nth-of-type是先选出所有的span，然后选个数
+
+===========
+@page :first  有限制，你只能改变 margins、 orphans、 widows、文档什么时候换页。别的所有css样式都会被忽略。
+
+------------------------
+css实现表格隔行变色，
+table tr:nth-child(odd){
+  background: #ccc;
+}
+
+弹性盒子： display:flex;
+
+红橙黄绿青蓝紫：red orange yello green blue cyan purple
+
+float几个值： left，right,none; 浮动元素会变成块级元素，不论原来是什么元素。
+clear几个值: left,right,both。
+
+div内的文本超过边框： 因为overflow属性默认是visiable,如果设置为auto，超长就会显示对应滚动条，scroll就会默认显示2个滚动条。
+
+行内元素inline，宽高无效： <span style="width:100px;height:100px;background-color:red;">adsfaf</span>
+-----------------------------
+margin负值的使用：
+绝对定位拉回到中心： <div id="test"></div>
+body{margin:0;padding:0;}
+   #test{
+       width:200px;
+       height:200px;
+       background:#F60;
+       position:absolute;
+       left:50%;
+       top:50%;
+       margin-left:-100px;
+       margin-top:-100px;
+   }
+=====================
+浮动塌陷重现： 父元素只包含浮动元素，且父元素未设置高度宽度的时候，就会塌陷。
+<div style="border:1px solid red;">
+<div style="width:100px;height:100px;border:1px solid blue;float:left;"><span>块1</span> float:left </div>
+<div style="width:100px;height:100px;border:1px solid blue;float:left;"><span>块2</span> float:left</div>
+<div style="width:100px;height:100px;border:1px solid blue;float:left;"><span>块3</span> float:left</div>
+</div>
+
+
+分享个东西：$(window).height(); //浏览器当前窗口可视区域宽度
+      $(document).height();//浏览器当前窗口文档对象宽度
+      $(document.body).outerHeight(true);//浏览器当前窗口文档body的总高度 包括border padding margin
+      $(document.body).height();//浏览器当前窗口文档body的高度
+
+
+--------------------------------
+16个常见颜色：    红绿蓝黄粉青灰  黑白
+Black
+DarkBlue
+DarkGreen
+DarkCyan
+DarkRed
+DarkMagenta
+DarkYellow
+Gray
+DarkGray
+Blue
+Green
+Cyan
+Red
+Magenta
+Yellow
+White
+-------------------------
+=号后面是否有条件：
+  var string="aaa=";
+var index=string.lastIndexOf("=");
+var hasCondition=string.length-1>index;
+console.log(hasCondition)
+-----------------------
+firfox   命令   -UILocale locale
+              Start firefox with the specified locale locale. Use this to override your environment ， 执行一个js
+js 在最后 关闭浏览器
+------------------------------------------
+附常用的动词列表：
+get 获取/                 set 设置,                        add 增加/                 remove 删除
+create 创建/            destory 移除                  start 启动/                stop 停止
+open 打开/              close 关闭,                     read 读取/                write 写入
+load 载入/               save 保存,                      create 创建/             destroy 销毁
+begin 开始/             end 结束,                       backup 备份/            restore 恢复
+import 导入/            export 导出,                   split 分割/                merge 合并
+inject 注入/             extract 提取,                   attach 附着/            detach 脱离
+bind 绑定/               separate 分离,               view 查看/                browse 浏览
+edit 编辑/                modify 修改,                  select 选取/              mark 标记
+copy 复制/              paste 粘贴,                    undo 撤销/                redo 重做
+insert 插入/             delete 移除,                  add 加入/                  append 添加
+clean 清理/             clear 清除,                    index 索引/                sort 排序
+find 查找/                search 搜索,                 increase 增加/           decrease 减少
+play 播放/               pause 暂停,                  launch 启动/               run 运行
+compile 编译/         execute 执行,               debug 调试/                trace 跟踪
+observe 观察/        listen 监听,                    build 构建/                  publish 发布
+input 输入/             output 输出,                  encode 编码/               decode 解码
+encrypt 加密/         decrypt 解密,                 compress 压缩/          decompress 解压缩
+pack 打包/             unpack 解包,                 parse 解析/                 emit 生成
+connect 连接/        disconnect 断开,           send 发送/                  receive 接收
+download 下载/     upload 上传,                 refresh 刷新/               synchronize 同步
+update 更新/          revert 复原,                  lock 锁定/                    unlock 解锁
+check out 签出/      check in 签入,             submit 提交/                commit 交付
+push 推/                 pull 拉,                        expand 展开/               collapse 折叠
+begin 起始/            end 结束,                    start 开始/                    finish 完成
+enter 进入/             exit 退出,                    abort 放弃/                   quit 离开
+obsolete 废弃/       depreciate 废旧,          collect 收集/                aggregate 聚集
+---------------------------------------------------------------
+velocity分页  #page($pager,"queryForm")
+-------------------------
+
+//格式化日期
+Handlebars.registerHelper('dateformate', function(value, options) {
+	if(value!=undefined){
+		var date = new Date(value);
+		var y = date.getFullYear();
+		var M = date.getMonth()+1;
+		var D = date.getDate();
+		var h = date.getHours();
+		var m = date.getMinutes();
+		var s = date.getSeconds();
+		if(M <= 9) M = "0"+M;
+		if(D <= 9) D = "0"+D;
+		if(h <= 9) h = "0"+h;
+		if(m <= 9) m = "0"+m;
+		if(s <= 9) s = "0"+s;
+		var str = y+"-"+M+"-"+D+" "+h+":"+m+":"+s;
+	    return str;
+	}
+	return "";
+});
+
+----------------------
+不一定有结果，因为可能用的onclick=abc();
+获取函数定义的位置：(函数绑定的时间,函数的位置)    只需要修改click为对应的事件名称(绑定事件)
+var event_map=$.data($("p")[0], "events")  // 获取某个元素的事件map  有多种事件，事件可以有多次
+var click_arr=event_map.click;  // 事件map中获取某个事件的afrr
+console.log(event_map)
+console.log(click_arr)
+console.log(click_arr[0].handler)
+
+
+var event_map=$.data($("#btnAdd")[0], "events")  // 获取某个元素的事件map  有多种事件，事件可以有多次
+var click_arr=event_map.click;  // 事件map中获取某个事件的afrr
+console.log(event_map)
+console.log(click_arr)
+console.log(click_arr[0].handler)
+----------------------------------------------
+提交表单事件：
+1、form标签直接写action。
+2、用属性定义action
+3、$("#formId").serialize();  序列化，然后用ajax请求。
+
+----------------------------------------------
+
+
+call函数:
+function f1(){
+    console.log("f1 run")
+}
+
+var string="f1";
+f1.call({});
+--------------------
+反射： 通过字符串调用函数
+function f1(){
+    console.log("f1 run")
+}
+eval("f1"+"()");
+--------------------
+js中根本就没有size()这个方法, string和arr都是用的length属性。
+
+---------------------------
+替换空行：
+^(\s*)\n
+^\s*\n  也可
+----------------
+找独立的单词: \bchushiyun\b
+
+
+---------------------
+开头替换select：    select替换为        \nselect
+-------------------------
+layer ui打开
+layer.open({
+  type: 1,
+  area: ['700px', '450px'],
+  fixed: false, //不固定
+  maxmin: true,
+  content: 'asdf'
+});
+----------------------------
+//重写alert
+       window.alert = function(msg, callback){
+           parent.layer.alert(msg, function(index){
+               parent.layer.close(index);
+               if(typeof(callback) === "function"){
+                   callback("ok");
+               }
+           });
+       }
+
+
+ //重写confirm式样框
+         window.confirm = function(msg, callback){
+             parent.layer.confirm(msg, {btn: ['确定','取消']},
+             function(){//确定事件
+                 if(typeof(callback) === "function"){
+                     callback("ok");
+                 }
+             });
+         }
+
+realDateFmt的作用： dateFmt是页面显示的格式，但是有的时候传给后台的值，和格式化的值不一样。就用realDateFmt
+
+segments.js报404   怎么找都找不到原因，  原来是缓存的问题。
+----------------------------------------
+js异或  异或肯定是异或1  没有异或0的
+异或  不同为1,相同为0，其实效果就是对1和0取反
+-----------------------------------------
+$("#categoryBehaviorData_checkboxFilter"+idIndex).on("change",function(){
+     var filter = $(this).val();
+     if($(this).is(":checked")){  //这句逻辑是只有勾选状态才触发0和1反转
+         filter = filter^1;
+     }
+     $(this).val(filter);
+ });
+
+
+http://repo.ehaier.dev:8000/svn/dev/ehaier-crm/branches/project_20180417/crm/crm-web/src/main/java/com/ehaier/rest/controller/activity/node/ActivityQueryRestController.java
+
+-------------------------------------------
+绑定回车事件：
+$(document).keydown(function(event){
+				if(event.keyCode==13){
+				$(".btn-login").click();
+				}
+	        });
+
+
+
+$(document).keydown(function(){
+    console.log(event.keyCode)
+    console.log(event.key)  //按键名称           如a
+    console.log(event.code)  //按键名称       如 Keya
+})
+
+-------------------------------------------
+禁止复制：
+<body oncopy="alert('对不起，禁止复制！');return false;"
+      onPaste="alert('对不起，禁止粘贴！');return false;"">
+
+
+解决禁止复制：
+f12   console输入      $("body").attr("oncopy","");$("body").attr("onPaste","");
+---------------------------------
+console.log($(".myexa-explan").find("p").html())
+$(".myexa-explan").each(function(){
+    console.log($(this).find("p").html())
+})
+--------------------------------------------
+关闭外层框架：
+//取消事件---ok
+	function backUrl(){
+	 	var index = parent.layer.getFrameIndex(window.name);
+		    parent.layer.close(index);
+    }
+-----------------------------------------------
+获取时间字符串：
+function getTime() {
+		var now= new Date(),
+		h=now.getHours(),
+		m=now.getMinutes(),
+		s=now.getSeconds();
+		return (h+":"+m+":"+s);
+	}
+
+
+异或： 异为真，同为假。    常用用法： a^1  异或1来取反
+同或： 同为真，异为假。
+----------------------------------------------------
+获取url绝对路径：
+var getAbsoluteUrl=(function(){
+    var a;
+    return function(url){
+        if(!a)a=document.createElement('a');
+        a.href=url;
+        return a.href;
+    };
+})();
+getAbsoluteUrl();
+------------------------------------------------------
+text-overflow:elipsis;      文本溢出时，用省略号代替(鼠标移动上去会显示)
+text-overflow:clip;      文本溢出时，截断(鼠标移动上去会显示)
+text-overflow:aaa;       文本溢出时，用aaa省略。
+
+图片居中背景：
+body.signin{height:auto;background:url(../img/login-background.jpg) no-repeat center fixed;-webkit-background-size:cover;-moz-background-size:cover;-o-background-size:cover;background-size:cover;color:rgba(255,255,255,.95)}
+------------------------------------------------------
+input不让输入空格: <input type="text" onkeyup="this.value=this.value.replace(/\s+/g,'')">
+<input type="text" name="userName" onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;">
+---------------------------------------------------
+event.returnValue= false;和return false  ：
+
+键盘事件：
+32==keyCode 空格
+13==keyCode 回车事件
+
+base64安全么： 不安全，他并不算是加密方式，而是一种二进制转为字母的算法。
+
+base64编码解码：
+String encode = Base64Utils.encode("aaa");
+		String decode = Base64Utils.decode(encode);
+		System.out.println(encode);
+		System.out.println(decode);
+
+base64-js编码解码：(需要先引入base64.js)
+var str="aaa";
+var base = new Base64();
+var encodeStr=base.encode(str);
+var decodeStr=base.decode(encodeStr);
+console.log(encodeStr)
+console.log(decodeStr)
+
+--------------------------------------------------------
+JDK8中有双冒号的用法，就是把方法当做参数传到stream内部，使stream的每个元素都传入到该方法里面执行一下。
+public static void main(String[] args) {
+		  List<String> al = Arrays.asList("a", "b", "c", "d");
+	       al.forEach(CommonTest::ddd);
+
+	}
+	public static void ddd(String string){
+		System.out.println(string);
+	}
+---------------------------------------------------------
+
+页面菜单靠左：
+1、float:left来实现
+2、z-index大值，然后右侧margin-left=左边的值。
+
+onkeydown,onkeyup,onkeypress: onkeyup无法识别功能键和箭头键，onkeydown和onkeypress是可以的。
+-------------------------------------------------
+base标签，指定页面所有的url的target:<head>
+<meta charset="utf-8">
+<title>菜鸟教程(runoob.com)</title>
+<base href="http://www.runoob.com//images/" target="_blank">
+</head>
+---------------------------------------------------
+拼音:
+<ruby>
+  漢 <rp>(</rp><rt>han</rt><rp>)</rp>
+  字 <rp>(</rp><rt>zi</rt><rp>)</rp>
+</ruby>
+
+选择器中的与或：
+,      逗号表示或   如：p,input,div  任意都可
+挨着表示且，      如  p:first  p标签的第一个元素
+空格表示  后代  如：div p       div中的任何p
+
+
+报错：Uncaught SyntaxError: Invalid or unexpected token(无效的符号)      如： var  1addsf;
+报错：Uncaught ReferenceError: a is not defined(变量未定义)         如：a;
+报错: Uncaught RangeError: Invalid array length（无效数组长度）  如：new Array(-1)
+报错：Uncaught TypeError: 123 is not a constructorvar   如：a= new 123;
+
+数组下标不存在是不会报错的。 如var arr=[]; arr[-1];
+---------------------------------------------------
+$(document).ready(function(){}) 和$(function(){}):
+ready和$(function) 一样的： 不等待图片和视频等加载完成，onload需要等待所有加载完毕。
+window.onload=function(){
+  console.log("onload")
+}
+$(document).ready(function(){console.log("ready")})
+$(function(){
+  console.log("$()")
+})
+--------------------------------------
+bind事件传参1：
+function f1(e){
+    console.log(e)
+    console.log(e.data)
+}
+$("p").bind("click","asdff",f1);
+----------------------------------
+bind事件传参2：
+$("p").bind("click","asdff",function(e){
+  console.log(e.data)
+});
+---------------------------------------
+函数获取事件：
+<p onclick="f1(this)">clickme</p>
+function f1(){
+    console.log(event)
+    console.log(this)
+}
+---------------------------------
+获取data属性：
+<p data-id="333">clickme</p>
+console.log($("p").data("id"))
+
+seamless属性（iframe中表示无缝）：  <iframe src="/demo/demo_iframe.html" seamless></iframe>
+
+-----------------------------------
+tree替换：
+一步
+"open":true,     替换为  空
+二步
+(\"name\":\"[\u4E00-\u9FA5a-zA-z0-9-_$]+",)  替换为   $1"open":true,           这个是包括中划线的
+var reg=new RegExp("^[\u4E00-\u9FA5a-zA-z0-9_\\-——\\-,.，。()（）]+$"); //    \\-表示英文中划线  \\-是中文中划线
+----------------------------------------------
+
+
+placeholder 替代：
+<input type="text" value="Enter your email" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Enter your email';}" required="">
+
+
+图片作为联连接：  <a href=""><img src="*.jpg" alt=""></a>
+
+margin负值：是让其兄弟节点，移动
+
+雅黑字体：font-family: 'microsoft yahei',"\5B8B\4F53",sans-serif;
+
+
+全屏背景:     这个不是拉伸，而是等比例裁剪
+body {
+    background: url(image.jpg) no-repeat;
+    background-size: 100%;
+}
+
+css设置input宽度：   必须加type="text"
+input[type="text"] {
+    width: 450px;
+}
+
+rgba()设置颜色：   如color:rgba(255,0,0,0.3)    最后是透明度
+
+box-sizing:border-box;    2个box如果要并排就是这样的，默认是垂直的。
+
+===============================================
+继承：
+字体可继承，否则要来回设置
+visiable可继承
+cursor可
+------------------------------------------------
+position不可   例如： 绝对定位，里面当然不能也绝对定位
+
+
+====================================================
+数组中获取随机值：var items = [12, 548 , 'a' , 2 , 5478 , 'foo' , 8852, , 'Doe' , 2145 , 119];
+var  randomItem = items[Math.floor(Math.random() * items.length)];
+数组注意点：  直接用[]好，  如果用Array();  new Array(2); 是创建2个长度的数组，还是创建一个元素为2的数组，歧义了。
+
+
+范围内获取随机数：var x = Math.floor(Math.random() * (max - min + 1)) + min;
+
+随机字母:
+function generateRandomAlphaNum(len) {
+    var rdmstring = "";
+    for( ; rdmString.length &lt; len; rdmString  += Math.random().toString(36).substr(2));
+    return rdmString.substr(0, len);
+}
+
+trim:
+String.prototype.trim = function(){return this.replace(/^\s+|\s+$/g, "");};
+
+是否是数字：
+function isNumber(n){
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+清空数组：
+var myArray = [12 , 222 , 1000 ];
+myArray.length = 0; // myArray will be equal to [].    或者myArray=[];
+
+截取数组：
+var arr = [5, 458 , 120 , -215 , 228 , 400 , 122205, -85411];
+var arr2=arr.splice(2,4);    //下标2开始，截取4个
+console.log(arr2)
+
+截取开头的数组：
+var arr = [5, 458 , 120 , -215 , 228 , 400 , 122205, -85411];
+var arr2=arr.splice(0,4);
+console.log(arr2)
+
+map遍历数组：
+var squares = [1,2,3,4].map(function (val) {
+    return val * val;
+});
+
+防止遍历自有属性：
+for (var name in object) {
+    if (object.hasOwnProperty(name)) {
+        // do something with name
+    }
+}
+
+
+isFinite(0/0) ; // false
+isFinite("foo"); // false
+isFinite("10"); // true
+isFinite(10);   // true
+isFinite(undifined);  // false
+isFinite();   // false
+isFinite(null);  // true  !!!
+
+多属性： div[width=100][height=100]
+style样式：div[style=color:red;width:100px;]
+
+
+
+ie的版本号：
+if ( $.browser.msie )
+ alert( $.browser.version );
+
+onclick和bind： 都可以找到，onclick可以直接找到，  bind需要2点，1、bind事件是什么，2、$("").click()来触发。
+-----------------------------------------------------------------
+bind,live,delegate,on:        on是语法糖，其实就是3个的汇总          bind live delegate        on是语法糖
+$( "#members li a" ).on( "click", function( e ) {} );
+$( "#members li a" ).bind( "click", function( e ) {} );
+// Live     不推荐
+$( document ).on( "click", "#members li a", function( e ) {} );
+$( "#members li a" ).live( "click", function( e ) {} );
+// Delegate
+$( "#members" ).on( "click", "li a", function( e ) {} );
+$( "#members" ).delegate( "li a", "click", function( e ) {} );
+------------------------------------------------------------------
+js 6种类型： number string boolean undefined object function
+
+浮动作用(都是在当前容器内)：  1、文字环绕（同级文本流）     2、块级元素并排展示
+浮动问题： 塌陷，子元素浮动后，父元素没有其他内容，计算值为空，出现塌陷的问题，清除浮动即可。
+同级文本流：  直接的文本流，div内的文本流，其他标签内的文本流
+clear:both  相当于左右都没有浮动时应有的位置和尺寸，用于处理浮动塌陷。
+
+border和outline的区别： outline是border外边的一圈，他不占用空间。
+
+是否是dom元素：  obj.nodeType==true
+
+instanceof 判断一个对象是否是类的原型：
+var obj={};
+obj.__proto__=String.prototype;
+console.log(obj instanceof String)
+
+
+判断对象的类型：Object.prototype.toString.call(obj); (只适用于typeof 是object的对象类型)       因为默认的toString就是返回对象的类型，但是直接使用obj.toString()不行，因为String,Array等都重写了头String方法
+var obj=new Array();
+var result=Object.prototype.toString.call(obj);
+console.log(result)
+
+父子窗口：  是否是顶级窗口
+console.log(self==top)
+console.log(self==parent)
+
+字符和ascii转换:
+//字符串转ascii码，用charCodeAt();
+//ascii码转字符串，用fromCharCode();
+var str = "A";
+var code = str.charCodeAt();
+var str2 = String.fromCharCode(code);
+
+禁止右键：document.oncontextmenu = function() { return false;}
+
+shiftKey：是否被按下          同理event.altKey event.ctrlKey
+$(document).keydown(function(event){
+			console.log(event.shiftKey)
+	        });
+----------------------------------------------------
+onclick传this和不传this：   传递的this表示当前元素
+<input type="text" onKeyPress="f1()">
+function f1(){
+  console.log(this)       //  这个this是window
+}
+<input type="text" onKeyPress="f1(this)">
+function f1(t){
+  console.log(t)  //t表示当前的html对象
+}
+-------------------------------------------------------
+
+自动刷新： <meta HTTP-EQUIV="refresh" CONTENT="2;http://www.baidu.com">       没有url，表示刷新当前页面   有url表示提奥转到另外一个页面
+
+选中事件：Select text: <input type="text" value="Hello world!" onselect="alert('You have selected some of the input.')" />
+
+input标签的onselect事件
+
+一组随机浮点数：console.log(Array.apply(null, {length: 20}).map(Function.call, Math.random))
+
+=========================================================
+冒泡和捕获事件的例子：
+<body>
+  <div class="a">
+     <li class="b">
+       <a href="#" class="c">buhuo</a>
+     </li>
+   </div>
+</body>
+<script >
+
+var div = document.getElementsByClassName('a')[0];    //注意[0]
+var li = document.getElementsByClassName('b')[0];
+var a = document.getElementsByClassName('c')[0];
+
+//第三个参数默认是false,
+//是对事件冒泡过程添加函数进行处理
+div.addEventListener('click',function(event){
+  console.log('div');
+});
+li.addEventListener('click',function(event){
+  console.log('li');
+});
+a.addEventListener('click',function(event){
+  console.log('a');
+});
+
+//事件捕获过程处理
+//第三个参数设为true
+div.addEventListener('click',function(event){
+  console.log('div');
+},true);
+li.addEventListener('click',function(event){
+  console.log('li');
+},true);
+a.addEventListener('click',function(event){
+  console.log('a');
+},true);
+</script>
+=====================================================
+useCapture:  true是捕获事件    false（默认是false）是冒泡事件
+addEventListener和attachEvent:     addEventListener和attachEvent是ie8以及更早版本用的
+
+
+2个时间不能填一个：
+function isWrongDate(){ // 只填开始或者结束时间报错
+     	var defineStartDt=$("#defineStartDt").val();
+		var defineEndDt=$("#defineEndDt").val();
+		var case1=(0!=defineStartDt.length)&&(0==defineEndDt.length);
+		var case2=(0==defineStartDt.length)&&(0!=defineEndDt.length);
+		return case1||case2;
+    }
+
+======================================================
+js去重：
+    Array.prototype.distinct = function (){
+     var arr = this,
+      i,
+      obj = {},
+      result = [],
+      len = arr.length;
+     for(i = 0; i< arr.length; i++){
+      if(!obj[arr[i]]){ //如果能查找到，证明数组元素重复了
+       obj[arr[i]] = 1;
+       result.push(arr[i]);
+      }
+     }
+     return result;
+    };
+
+    var arr = [1,2,3,4,5,6,5,3,2,4,56,4,1,2,1,1,1,1,1,1,];
+    var resultarr=arr.distinct(); //去重后的arr
+
+    console.log(resultarr); //1,2,3,4,5,6,56
+    console.log(resultarr.length); //1,2,3,4,5,6,56
+===================================================
+my97   自定义格式： realDateFmt和vel配合
+<div class="form-group" id="dateGroup">
+           <label class="col-xs-3 col-sm-3 control-label user-label" >自定义分析周期</label>
+           <div class="col-xs-9 col-sm-9">
+             <div class="Wdate-wrapper"><!-- 专用于Wdate的div,用于控制样式-->
+             <input type="text" class="form-control Wdate col-xs-3 col-sm-3 mt-0 width-183"
+             onclick="WdatePicker({dateFmt:'yyyy-MM-dd',realDateFmt:'yyyy-MM-dd HH:mm:ss',vel:'defineStartDt',maxDate:'#F{$dp.$D(\'defineEndDtShow\')||\'%y-%M-%d-%H-%m-%s\'}'})" id="defineStartDtShow" name="defineStartDtShow" value="" readonly="readonly">
+             <label class="horizontal-date-separate width-3" > - </label>
+             <input id="defineStartDt" name="defineStartDt" type="text" hidden />
+             <input type="text"  class="form-control Wdate col-xs-3 col-sm-3 mt-0 width-183"
+             onclick="WdatePicker({dateFmt:'yyyy-MM-dd',realDateFmt:'yyyy-MM-dd HH:mm:ss',vel:'defineEndDt',minDate:'#F{$dp.$D(\'defineStartDtShow\')}',maxDate:'%y-%M-%d-%H-%m-%s'})" id="defineEndDtShow"
+             name="defineEndDtShow" value="" readonly="readonly">
+             <input id="defineEndDt" name="defineEndDt" type="text" hidden />
+             </div>
+                       </div>
+         </div>
+---------------------------------------
+maxdate 也可以设置new date(),实测只能选到1号
+---------------------------------
+start <end，并且都小于当前时间
+start  --- maxDate:'#F{$dp.$D(\'defineEndDt\')||\'%y-%M-%d-%H-%m-%s\'}'
+end --- minDate:'#F{$dp.$D(\'defineStartDt\')}',maxDate:'%y-%M-%d-%H-%m-%s'})"
+
+自定义格式化：
+realDateFmt:'yyyy-MM-dd HH:mm:ss',vel:'defineStartDt'
+realDateFmt:'yyyy-MM-dd HH:mm:ss',vel:'defineEndDt'
+<input id="defineStartDt" name="defineStartDt" type="text" value=""  />
+<input id="defineEndDt" name="defineEndDt" type="text"  value=""  />
+=======================================================
+validate 不验证隐藏元素:   下面语句就可以验证hidden元素了，不忽略任何元素
+var validateResult = $("#saveGroupPortrayAnalysisForm").validate({
+        ignore: []  // 对隐藏元素也进行验证
+    });
+==============================
+微信红包:
+red_flag=true;
+function search(){
+    if($("body").text().indexOf('宋宝爱') != -1 && red_flag) {
+        alert("@群助手 031 签到");
+        red_flag=false;
+        clearInterval("search")  //提示一次后退出
+    }
+}
+setInterval("search()",2000,1)  // 每2秒一次
+================================
+
+document.querySelector('[data-username="filehelper"]').click();    //这里修改data-username来找到对应的chatdiv
+var appElement = document.querySelector('[ng-controller=chatSenderController]');
+var $scope = angular.element(appElement).scope();
+$scope.editAreaCtn = "@群助手 031 签到";
+$scope.sendTextMessage();
+--------------------------------
+这个是往选中的chatdiv发消息:
+var appElement = document.querySelector('[ng-controller=chatSenderController]');
+var $scope = angular.element(appElement).scope();
+$scope.editAreaCtn = "@群助手 031 签到";
+$scope.sendTextMessage();
+================================
+toString(new Date()) 和 new Date().toString() :         jquery中的class2type={};     toString= class2type.toString ; 所以toString是Object对象的toString方法
+相当于先确定要调用的方法toString()是Object的方法, 然后替换这个方法中的this为new Date()
+如果是new Date().toString() 那么用的Date()自己的toString()
+代替对象指的是已经确定函数之后的this,并不是替代函数.
+================================
+短路:
+||    如果前面是true  则短路
+&&    前面是false  则短路
+==============================
+
+
+##//重写alert
+       window.alert = function(msg, callback){
+           parent.layer.alert(msg, function(index){
+               parent.layer.close(index);
+               if(typeof(callback) === "function"){
+                   callback("ok");
+               }
+           });
+       }
+
+
+=============================
+
+//重写confirm式样框
+        window.confirm = function(msg, callback){
+            parent.layer.confirm(msg, {btn: ['确定','取消']},
+            function(){//确定事件
+                if(typeof(callback) === "function"){
+                    callback("ok");
+                }
+            });
+        }
