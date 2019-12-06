@@ -510,7 +510,11 @@ systemctl restart redis;  # 重启     注意，这里其实不用重启，新�
 /usr/bin/redis-cli   # 打开客户端(注意，设置了密码，客户端仍然是可以连接的，只不过操作的时候才会提示没有权限)
 keys *    提示(error) NOAUTH Authentication required.
 
-/usr/bin/redis-cli -a 1234； # -a表示密码
+
+/usr/bin/redis-cli -h -a 1234
+
+
+/usr/bin/redis-cli -a 1234 ; # -a表示密码
 keys *    # 这次是正常查询了
 
 
